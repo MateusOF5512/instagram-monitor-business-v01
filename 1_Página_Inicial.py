@@ -10,6 +10,7 @@ st.set_page_config(page_title="Instagram Monitor", page_icon=im, layout="wide")
 from layout.layout_choquei import *
 from plots.plots_choquei import *
 from plots.plots_folha import *
+from outros.variaveis_folha import *
 
 
 df = get_data(path_todos)
