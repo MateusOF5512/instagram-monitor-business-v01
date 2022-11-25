@@ -37,9 +37,9 @@ def tratamento_dados2(df):
 df = get_data(path_estadao)
 df = tratamento_dados2(df)
 
-im1 = Image.open("publicacao.jpeg")
-im2 = Image.open("like.png")
-im3 = Image.open("comentario.png")
+im1 = Image.open("image/publicacao.jpeg")
+im2 = Image.open("image/like.png")
+im3 = Image.open("image/comentario.png")
 
 ### GRAFICO INDICADOR - MÉTRICAS GLOBAIS, LIKES E COMENTÁRIOS
 # DADOS DE ENTRADA:
@@ -166,9 +166,9 @@ figA3.add_layout_image(dict(source=im3, xref="paper", yref="paper", x=0.01, y=0.
 
 
 ### GRAFICO 2 - PIZZA -
-im1 = Image.open("publicacao.jpeg")
-im2 = Image.open("like.png")
-im3 = Image.open("comentario.png")
+im1 = Image.open("image/publicacao.jpeg")
+im2 = Image.open("image/like.png")
+im3 = Image.open("image/comentario.png")
 
 df_type = df.groupby('tipo').agg('sum')
 IMAGEM = df_type["conta"].iloc[1]

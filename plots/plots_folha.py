@@ -5,6 +5,7 @@ import numpy as np
 from plotly.subplots import make_subplots
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
+from wordcloud import STOPWORDS
 from PIL import Image
 
 from st_aggrid import AgGrid
@@ -42,9 +43,9 @@ def tratamento_dados2(df):
 df = get_data(path_posts)
 df = tratamento_dados2(df)
 
-im1 = Image.open("publicacao.jpeg")
-im2 = Image.open("like.png")
-im3 = Image.open("comentario.png")
+im1 = Image.open("image/publicacao.jpeg")
+im2 = Image.open("image/like.png")
+im3 = Image.open("image/comentario.png")
 
 ### GRAFICO INDICADOR - MÉTRICAS GLOBAIS, LIKES E COMENTÁRIOS
 # DADOS DE ENTRADA:
@@ -171,9 +172,9 @@ figA3.add_layout_image(dict(source=im3, xref="paper", yref="paper", x=0.01, y=0.
 
 
 ### GRAFICO 2 - PIZZA -
-im1 = Image.open("publicacao.jpeg")
-im2 = Image.open("like.png")
-im3 = Image.open("comentario.png")
+im1 = Image.open("image/publicacao.jpeg")
+im2 = Image.open("image/like.png")
+im3 = Image.open("image/comentario.png")
 
 df_type = df.groupby('tipo').agg('sum')
 IMAGEM = df_type["conta"].iloc[1]
@@ -379,15 +380,151 @@ plt.axis('off') # to off the axis of x and
 
 def folha_tabela(df):
 
-    gd = GridOptionsBuilder.from_dataframe(df)
-    gd.configure_pagination(enabled=True)
-    gd.configure_default_column(editable=False)
-    gd.configure_selection(use_checkbox=True, selection_mode='multiple')
-    gd.configure_side_bar()
-    gridoptions = gd.build()
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_pagination(enabled=True)
+    gb.configure_column("Nome", headerCheckboxSelection=True)
+    gb.configure_default_column(groupable=True, value=True, enableRowGroup=True,
+                                    aggFunc="sum", editable=True)
+    gb.configure_selection(use_checkbox=True, selection_mode='multiple')
+    gb.configure_side_bar()
+    gridoptions = gb.build()
     df_grid = AgGrid(df, gridOptions=gridoptions, enable_enterprise_modules=True,
-                     update_mode=GridUpdateMode.SELECTION_CHANGED, height=250, width='100%')
+                     update_mode=GridUpdateMode.SELECTION_CHANGED, height=400, width='100%')
     selected_rows = df_grid["selected_rows"]
     selected_rows = pd.DataFrame(selected_rows)
 
     return selected_rows
+
+
+def plot_bar(formato, selected_rows, optionx, optiony):
+    fig = go.Figure()
+    if formato == "Total de Atividades":
+        df_sum = selected_rows.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx,
+                                                                                                  ascending=True)
+        df_quant = selected_rows[optionx].value_counts().reset_index().sort_values(by="index", ascending=True)
+        x1 = df_sum[optionx]
+        y1 = df_sum[optiony]
+        quant = df_quant[optionx]
+
+        fig.add_trace(go.Bar(
+            x=x1, y=y1, text=quant,
+            hovertemplate="</br><b>Eixo X:</b> %{x}" +
+                          "</br><b>Eixo Y:</b> %{y:,.0f}" +
+                          "</br><b>Publicações:</b> %{text}",
+            textposition='none', marker_color=('#E1306C')))
+
+    elif formato == "Média de Atividades":
+
+        df_mean = selected_rows.groupby([optionx])[optiony].agg('mean').reset_index().sort_values(optionx,
+                                                                                                  ascending=True)
+        df_quant = selected_rows[optionx].value_counts().reset_index().sort_values(by="index", ascending=True)
+        x1 = df_mean[optionx]
+        y1 = df_mean[optiony]
+        quant = df_quant[optionx]
+
+        fig.add_trace(go.Bar(
+            x=x1, y=y1, text=quant,
+            hovertemplate="</br><b>Eixo X:</b> %{x}" +
+                          "</br><b>Eixo Y:</b> %{y:,.0f}" +
+                          "</br><b>Publicações:</b> %{text}",
+            textposition='none', marker_color=('#E1306C')))
+
+    elif formato == "Atividades por Publicação":
+        selected_rows = selected_rows.sort_values(optionx, ascending=True)
+        x = selected_rows[optionx]
+        y = selected_rows[optiony]
+        text = selected_rows["shortcode"]
+
+        fig.add_trace(go.Bar(
+            x=x, y=y, text=text,
+            hovertemplate="</br><b>Eixo X:</b> %{x}" +
+                          "</br><b>Eixo Y:</b> %{y:,.0f}" +
+                          "</br><b>Shortcode:</b> %{text}",
+            textposition='none', marker_color=('#4B0082')))
+
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        height=450, margin=dict(l=20, r=20, b=20, t=20),
+        legend=dict(font_size=16, orientation="h", yanchor="top", y=1.1, xanchor="center", x=0.5))
+    fig.update_xaxes(
+        title_text="Eixo X: "+optionx, title_font=dict(family='Sans-serif', size=20),
+        tickfont=dict(family='Sans-serif', size=12), nticks=15, showgrid=False)
+    fig.update_yaxes(
+        title_text="Eixo Y: "+optiony, title_font=dict(family='Sans-serif', size=22),
+        tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
+
+    return fig
+
+
+
+def plot_line(selected_rows, optionx, optiony):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=selected_rows[optionx], y=selected_rows[optiony],
+        mode='lines', stackgroup='one', hovertemplate=None, line=dict(width=1, color='#4169E1')))
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        legend=dict(font_size=10, orientation="h", yanchor="top", y=1.25, xanchor="center", x=0.5),
+        height=400, hovermode="x unified", margin=dict(l=1, r=1, b=1, t=1))
+    fig.update_xaxes(
+        title_text="Eixo X: "+optionx, title_font=dict(family='Sans-serif', size=12),
+        rangeslider_visible=True)
+    fig.update_yaxes(
+        title_text="Eixo Y: "+optiony, title_font=dict(family='Sans-serif', size=12),
+        tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
+
+    return fig
+
+
+def plot_hotmap(df, formato):
+    df_map = df.groupby(['semana', 'Turno']).agg('sum').reset_index()
+
+    seg_MN = df_map[formato].iloc[1]; seg_TD = df_map[formato].iloc[3]; seg_NT = df_map[formato].iloc[2]; seg_MD = df_map[formato].iloc[0];
+    ter_MN = df_map[formato].iloc[5]; ter_TD = df_map[formato].iloc[7]; ter_NT = df_map[formato].iloc[6]; ter_MD = df_map[formato].iloc[4];
+    qua_MN = df_map[formato].iloc[9]; qua_TD = df_map[formato].iloc[11]; qua_NT = df_map[formato].iloc[10]; qua_MD = df_map[formato].iloc[8];
+    qui_MN = df_map[formato].iloc[13]; qui_TD = df_map[formato].iloc[15]; qui_NT = df_map[formato].iloc[14]; qui_MD = df_map[formato].iloc[12];
+    sex_MN = df_map[formato].iloc[17]; sex_TD = df_map[formato].iloc[19]; sex_NT = df_map[formato].iloc[18]; sex_MD = df_map[formato].iloc[16];
+    sab_MN = df_map[formato].iloc[21];  sab_TD = df_map[formato].iloc[23]; sab_NT = df_map[formato].iloc[22]; sab_MD = df_map[formato].iloc[20];
+    dom_MN = df_map[formato].iloc[25]; dom_TD = df_map[formato].iloc[27]; dom_NT = df_map[formato].iloc[26]; dom_MD = df_map[formato].iloc[24];
+
+    matriz = [[dom_MD, seg_MD, ter_MD, qua_MD, qui_MD, sex_MD, sab_MD],
+              [dom_NT, seg_NT, ter_NT, qua_NT, qui_NT, sex_NT, sab_NT],
+              [dom_TD, seg_TD, ter_TD, qua_TD, qui_TD, sex_TD, sab_TD],
+              [dom_MN, seg_MN, ter_MN, qua_MN, qui_MN, sex_MN, sab_MN]]
+
+    fig = go.Figure(data=go.Heatmap(
+        z=matriz, name="", text=matriz,
+        x=['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+        y=['Madrugada', 'Noite', 'Tarde', 'Manhã'],
+        texttemplate="%{text:,.0f}",
+        hovertemplate="</br><b>Dia:</b> %{x}" +
+                      "</br><b>Turno:</b> %{y}" +
+                      "</br><b>Interações:</b> %{z:,.0f}",
+        colorscale='Portland'))
+    fig.update_layout(autosize=False,
+                        height=400, margin=dict(l=10, r=10, b=10, t=15),
+                        paper_bgcolor="#F8F8FF", font={'size': 14})
+
+    return fig
+
+
+def plot_wordcoud(df):
+    words = ' '.join(df['descricao'])
+    stop_words = STOPWORDS.update(["da", "do", "a", "e", "o", "em", "para", "um",
+                                   "que", "por", "como", "uma", "de", "onde", "são",
+                                   "sim", "não", "mas", "mais", "então", "das", "dos", "nas", "nos",
+                                   ])
+
+    fig, ax = plt.subplots()
+    wordcloud = WordCloud(
+        height=200,
+        min_font_size=8,
+        scale=2.5,
+        background_color='#F9F9FA',
+        max_words=150,
+        stopwords=stop_words,
+        min_word_length=3).generate(words)
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis('off')  # to off the axis of x and
+
+    return fig
