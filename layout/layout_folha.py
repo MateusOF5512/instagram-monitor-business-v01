@@ -4,19 +4,18 @@ from outros.variaveis_folha import *
 from st_aggrid import AgGrid
 from st_aggrid.grid_options_builder import GridOptionsBuilder
 from st_aggrid.shared import GridUpdateMode
+from PIL import Image
 
 from plots.plots_folha import *
 
 ## - Topo e Rodapé da Aplicação:
 def topo():
-    st.markdown(html_title, unsafe_allow_html=True) #Explorador de Dados Abertos
-    st.markdown(""" <style>
-        footer {visibility: hidden;}
-        </style> """, unsafe_allow_html=True)
+    st.markdown(html_title, unsafe_allow_html=True)
+
     return None
 
 def rodape():
-    st.markdown(html_rodape, unsafe_allow_html=True) # ---- by: mateus
+    st.markdown(html_rodape, unsafe_allow_html=True)
     return None
 
 config={"displayModeBar": True,
@@ -26,6 +25,12 @@ config={"displayModeBar": True,
                                    'hoverClosestCartesian', 'hoverCompareCartesian']}
 
 def folha_posts(df):
+
+    with st.sidebar:
+        icon = Image.open("image/InstaMonitor.png")
+        st.image(icon, use_column_width=True, caption="Versão: 0.0.2 " )
+        st.text("bem Vindo2")
+
     st.text("")
     st.text("")
     st.markdown(html_header_10, unsafe_allow_html=True)  # 2 - Características da População Vacinada
@@ -103,23 +108,3 @@ def folha_posts(df):
     return None
 
 
-def folha_tabela(df):
-    col1, col2, col3 = st.columns([50, 1100, 50])
-    with col1:
-        st.text("")
-    with col2:
-        st.markdown(html_card_header_3A1, unsafe_allow_html=True)
-
-        gd = GridOptionsBuilder.from_dataframe(df)
-        gd.configure_pagination(enabled=False)
-        gd.configure_side_bar()
-        gd.configure_default_column(groupable=True, value=True, enableRowGroup=True,
-                                    aggFunc="sum", editable=True)
-        gd.configure_selection(use_checkbox=True, selection_mode='multiple')
-        gridoptions = gd.build()
-        df_grid = AgGrid(df, gridOptions=gridoptions, enable_enterprise_modules=False,
-                         update_mode=GridUpdateMode.SELECTION_CHANGED, height=350, width='100%')
-        selected_rows = df_grid["selected_rows"]
-        selected_rows = pd.DataFrame(selected_rows)
-
-    return selected_rows
