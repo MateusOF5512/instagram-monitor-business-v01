@@ -2,23 +2,23 @@ from PIL import Image
 
 # CAMINHO PARA OS DADOS ----------------------------------------------------------------
 
-path_posts = "df150-folhadespaulo-tratado.csv"
+path_posts = "data/df150-folhadespaulo-tratado.csv"
 #path_comentarios = "instagram_allcomments.csv"
 
-path_globo = "df150-globo-tratado.csv"
+path_globo = "data/df150-globo-tratado.csv"
 
-path_estadao = "df150-estadao-tratado.csv"
+path_estadao = "data/df150-estadao-tratado.csv"
 
-path_uol = "df150-uol-tratado.csv"
+path_uol = "data/df150-uol-tratado.csv"
 
-path_cnn = "df150-cnn-tratado.csv"
+path_cnn = "data/df150-cnn-tratado.csv"
 
-path_choquei = "df150-choquei-tratado.csv"
-path_todos = "todos-tratado.csv"
+path_choquei = "data/df150-choquei-tratado.csv"
+path_todos = "data/portais_dados.csv"
 
 # - TOPO E RODAPÉ ------------------------------------------------------------------------
 html_title="""
-<h1 style="font-size:200%; color:#5B51D8; font-family:sans-serif;
+<h1 style="font-size:230%; color:#5B51D8; font-family:sans-serif;
             text-align:center; ">Instagram Monitor Interativo</h1>
 """
 html_rodape="""
@@ -29,7 +29,7 @@ html_rodape="""
   margin-right: auto;
   border-style: inset;
   border-width: 1.5px;">
-  <p style="color:Gainsboro; text-align: center;">Última atualização: 27/10/2022</p>
+  <p style="color:Gainsboro; text-align: center;">Última atualização: 25/11/2022</p>
 """
 
 
@@ -188,4 +188,19 @@ html_card_header_3A1="""
                                   >Tabela Interativa</h5>
   </div>
 </div>
+"""
+
+
+#########################################################################################
+#########################################################################################
+#########################################################################################
+
+html_title_sidebar="""
+<h1 style="font-size:150%; color:#4169E1; font-family:sans-serif;
+            text-align:center; ">Painel de Controle - Geral</h1>
+"""
+
+html_sub1_sidebar="""
+<h5 class="card-title" style="color:#4169E1; font-family:sans-serif;
+    text-align: center;font-size: 100%;">Selecione o Gráfico e seus Eixos:</h5>
 """
