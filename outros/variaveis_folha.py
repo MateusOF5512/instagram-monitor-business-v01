@@ -17,10 +17,20 @@ path_choquei = "data/df150-choquei-tratado.csv"
 path_todos = "data/portais_dados.csv"
 
 # - TOPO E RODAPÉ ------------------------------------------------------------------------
-html_title="""
-<h1 style="font-size:230%; color:#5B51D8; font-family:sans-serif;
-            text-align:center; ">Instagram Monitor Interativo</h1>
+html_title1="""
+<h1 style="font-size:250%; color:#5B51D8; font-family:sans-serif;
+            text-align:center; ">Data App - Monitor Manual</h1>
+<h2 style="font-size:150%; color:#5B51D8; font-family:sans-serif;
+            text-align:center; ">Dados: Publicações do Instagram</h2>
 """
+
+html_title2="""
+<h1 style="font-size:250%; color:#5B51D8; font-family:sans-serif;
+            text-align:center; ">Data App - Monitor Desenvolvido</h1>
+<h2 style="font-size:150%; color:#5B51D8; font-family:sans-serif;
+            text-align:center; ">Dados: Publicações do Instagram</h2>
+"""
+
 html_rodape="""
 <hr style= "display: block;
   margin-top: 0.5em;
@@ -29,7 +39,7 @@ html_rodape="""
   margin-right: auto;
   border-style: inset;
   border-width: 1.5px;">
-  <p style="color:Gainsboro; text-align: center;">Última atualização: 25/11/2022</p>
+  <p style="color:Gainsboro; text-align: center;">Versão Beta 0.0.4</p>
 """
 
 
@@ -197,10 +207,25 @@ html_card_header_3A1="""
 
 html_title_sidebar="""
 <h1 style="font-size:150%; color:#4169E1; font-family:sans-serif;
-            text-align:center; ">Painel de Controle - Geral</h1>
+            text-align:center; ">Painel de Controle</h1>
 """
 
 html_sub1_sidebar="""
 <h5 class="card-title" style="color:#4169E1; font-family:sans-serif;
     text-align: center;font-size: 100%;">Selecione o Gráfico e seus Eixos:</h5>
+"""
+
+
+html_card_header_1AA="""
+<div class="card">
+  <div class="card-body" style="border-radius: 15px 15px 0px 0px; background: #5B51D8;  
+                                border:solid; border-color: black; border-width: 1px 1px 1px 1px;
+                                padding-top: 1px; padding-right: 20px; padding-bottom: 1px; padding-left: 20px; 
+                                width: 100%; height: 40px;">
+    <h5 class="card-title" style="background-color:#5B51D8; color:#F5F5F5; font-family:sans-serif;
+                                  padding-top: 7px; padding-right: 15px; padding-bottom: 1px; padding-left: 15px; 
+                                  text-align: center;font-size: 110%;" 
+                                  >Gráfico de Barra</h5>
+  </div>
+</div>
 """
