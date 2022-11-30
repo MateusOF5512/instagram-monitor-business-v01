@@ -493,7 +493,7 @@ def plot_bar(formato, selected_rows, optionx, optiony):
             x=x, y=y, text=text,
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
-                          "</br><b>Link:</b> %{text}",
+                          "</br><b>Linkmap:</b> %{text}",
             textposition='none', marker_color=('#4B0082')))
 
     fig.update_layout(
@@ -532,13 +532,13 @@ def plot_line(selected_rows, optionx, optiony):
 def plot_hotmap(df, formato):
     df_map = df.groupby(['semana', 'Turno']).agg('sum').reset_index()
 
-    seg_MN = df_map[formato].iloc[1]; seg_TD = df_map[formato].iloc[3]; seg_NT = df_map[formato].iloc[2]; seg_MD = df_map[formato].iloc[0];
-    ter_MN = df_map[formato].iloc[5]; ter_TD = df_map[formato].iloc[7]; ter_NT = df_map[formato].iloc[6]; ter_MD = df_map[formato].iloc[4];
-    qua_MN = df_map[formato].iloc[9]; qua_TD = df_map[formato].iloc[11]; qua_NT = df_map[formato].iloc[10]; qua_MD = df_map[formato].iloc[8];
-    qui_MN = df_map[formato].iloc[13]; qui_TD = df_map[formato].iloc[15]; qui_NT = df_map[formato].iloc[14]; qui_MD = df_map[formato].iloc[12];
+    dom_MN = df_map[formato].iloc[1]; dom_TD = df_map[formato].iloc[3]; dom_NT = df_map[formato].iloc[2]; dom_MD = df_map[formato].iloc[0];
+    qua_MN = df_map[formato].iloc[5]; qua_TD = df_map[formato].iloc[7]; qua_NT = df_map[formato].iloc[6]; qua_MD = df_map[formato].iloc[4];
+    qui_MN = df_map[formato].iloc[9]; qui_TD = df_map[formato].iloc[11]; qui_NT = df_map[formato].iloc[10]; qui_MD = df_map[formato].iloc[8];
+    seg_MN = df_map[formato].iloc[13]; seg_TD = df_map[formato].iloc[15]; seg_NT = df_map[formato].iloc[14]; seg_MD = df_map[formato].iloc[12];
     sex_MN = df_map[formato].iloc[17]; sex_TD = df_map[formato].iloc[19]; sex_NT = df_map[formato].iloc[18]; sex_MD = df_map[formato].iloc[16];
-    sab_MN = df_map[formato].iloc[21];  sab_TD = df_map[formato].iloc[23]; sab_NT = df_map[formato].iloc[22]; sab_MD = df_map[formato].iloc[20];
-    dom_MN = df_map[formato].iloc[25]; dom_TD = df_map[formato].iloc[27]; dom_NT = df_map[formato].iloc[26]; dom_MD = df_map[formato].iloc[24];
+    sab_MN = df_map[formato].iloc[21]; sab_TD = df_map[formato].iloc[23]; sab_NT = df_map[formato].iloc[22]; sab_MD = df_map[formato].iloc[20];
+    ter_MN = df_map[formato].iloc[25]; ter_TD = df_map[formato].iloc[27]; ter_NT = df_map[formato].iloc[26]; ter_MD = df_map[formato].iloc[24];
 
     matriz = [[dom_MD, seg_MD, ter_MD, qua_MD, qui_MD, sex_MD, sab_MD],
               [dom_NT, seg_NT, ter_NT, qua_NT, qui_NT, sex_NT, sab_NT],
