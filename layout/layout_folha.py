@@ -19,8 +19,12 @@ def topo2():
 
     return None
 
-def rodape():
-    st.markdown(html_rodape, unsafe_allow_html=True)
+def rodape1():
+    st.markdown(html_rodape1, unsafe_allow_html=True)
+    return None
+
+def rodape2():
+    st.markdown(html_rodape2, unsafe_allow_html=True)
     return None
 
 config={"displayModeBar": True,
