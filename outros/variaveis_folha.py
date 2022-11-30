@@ -21,17 +21,17 @@ html_title1="""
 <h1 style="font-size:250%; color:#5B51D8; font-family:sans-serif;
             text-align:center; ">Data App - Monitor Manual</h1>
 <h2 style="font-size:150%; color:#5B51D8; font-family:sans-serif;
-            text-align:center; ">Dados: Publicações do Instagram</h2>
+            text-align:center; ">Publicações dos 10 maiores Instagrans de Notícias</h2>
 """
 
 html_title2="""
 <h1 style="font-size:250%; color:#5B51D8; font-family:sans-serif;
             text-align:center; ">Data App - Monitor Desenvolvido</h1>
 <h2 style="font-size:150%; color:#5B51D8; font-family:sans-serif;
-            text-align:center; ">Dados: Publicações do Instagram</h2>
+            text-align:center; ">Dados: Publicações dos 10 maiores Instagrans de Notícias</h2>
 """
 
-html_rodape="""
+html_rodape1="""
 <hr style= "display: block;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -42,6 +42,17 @@ html_rodape="""
   <p style="color:Gainsboro; text-align: center;">Versão Beta 0.0.4</p>
 """
 
+
+html_rodape2="""
+<hr style= "display: block;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  margin-left: auto;
+  margin-right: auto;
+  border-style: inset;
+  border-width: 1.5px;">
+  <p style="color:Gainsboro; text-align: center;">Última Atualização dos Dados: 29/11/2022 - 22:00</p>
+"""
 
 
 # - PARTE 1 ------------------------------------------------------------------
