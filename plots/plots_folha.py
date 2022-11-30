@@ -487,13 +487,13 @@ def plot_bar(formato, selected_rows, optionx, optiony):
         selected_rows = selected_rows.sort_values(optionx, ascending=True)
         x = selected_rows[optionx]
         y = selected_rows[optiony]
-        text = selected_rows["shortcode"]
+        text = selected_rows["link"]
 
         fig.add_trace(go.Bar(
             x=x, y=y, text=text,
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
-                          "</br><b>Shortcode:</b> %{text}",
+                          "</br><b>Link:</b> %{text}",
             textposition='none', marker_color=('#4B0082')))
 
     fig.update_layout(
