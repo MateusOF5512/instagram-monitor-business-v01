@@ -19,8 +19,12 @@ from outros.variaveis_folha import *
 df = get_data(path_todos)
 df = df.reset_index()
 
-df = df[['Nome', 'time', 'descricao', 'likes', 'comentarios', 'inter', 'tipo',
-         'dia', 'hora', 'semana', 'Turno', 'shortcode','index', 'ID post', 'UNIDADE']]
+df['link'] = 'www.instagram.com/p/' + df['shortcode'].astype(str)
+
+df = df[['Nome', 'time', 'descricao', 'likes', 'comentarios', 'inter', 'tipo', 'link',
+         'dia', 'hora', 'semana', 'Turno' ,'index', 'ID post', 'UNIDADE']]
+
+
 
 with st.sidebar:
     st.markdown(html_title_sidebar, unsafe_allow_html=True)
@@ -55,10 +59,10 @@ with st.sidebar:
 
             grafico = st.selectbox("Selecione o tipo de Gráfico:", graficos)
 
-            df_x = df[['Nome', 'tipo', 'shortcode', 'dia', 'hora', 'semana', 'Turno']]
+            df_x = df[['Nome', 'tipo', 'link', 'dia', 'hora', 'semana', 'Turno']]
             optionx = st.selectbox('Selecione coluna para o Eixo X:', df_x.columns.unique(), index=0)
 
-            df_y = df[['likes', 'comentarios', 'inter']]
+            df_y = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
             optiony = st.selectbox('Selecione coluna para o Eixo Y:', df_y.columns.unique(), index=0, key=10)
             st.markdown("")
 
@@ -66,7 +70,7 @@ with st.sidebar:
                                options=["Total de Atividades", "Média de Atividades", "Atividades por Publicação"])
 
             ##################################
-            df_x_linha = df[['descricao', 'shortcode', 'time', 'dia']]
+            df_x_linha = df[['descricao', 'link', 'time', 'dia']]
             optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
                                          df_x_linha.columns.unique(), index=2, key=11)
 
@@ -91,18 +95,78 @@ with st.sidebar:
 
         st.text("3")
 
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
+    st.text("")
 
-    st.markdown("")
-
-    rodape()
+    rodape1()
 
 
 if opt == "Monitor Manual":
     topo1()
     st.markdown("""---""")
 
-    with st.expander("🎈 PRIMEIRA VEZ AQUI?"):
-        st.markdown('exeplicação 1')
+    with st.expander("PRIMEIRA VEZ AQUI?"):
+
+        st.markdown("O Data App é uma Aplicativo focado na análise e exploração de dados, está aplicacação "
+                    "trabalha com dados das publicações dos maiores portais de noticias do Brasil, onde cada linha "
+                    "da base de dados representa uma publicação.")
+        st.markdown("Está primeira página é o Monitor Manual, seu objetivo é permitir ao usúario realizar a análise, exploração e "
+                    "manipulação dos dados de entrada dos Gráficos e como esses Gráficos serão apresentados")
+
+        st.markdown("<h2 style='font-size:150%; text-align: left; color: #5B51D8;'" +
+                    ">Painel de Controle:</h2>",
+                    unsafe_allow_html=True)
+        st.markdown("O painel de controle, localizado na barra lateral, tem a função de armazar a nagevegação "
+                    "entre paginas e as configurações, possibilitando ao usuário realizar aletrações nas visualizações "
+                    "sem poluir a tela principal.")
+        st.markdown("")
+
+        col1, col2 = st.columns([1,1])
+        with col1:
+            st.markdown("<h2 style='font-size:150%; text-align: left; color: #5B51D8;'" +
+                        ">Configurar entrada de Dados:</h2>",
+                        unsafe_allow_html=True)
+            st.markdown(
+                "Localizado no Painel de Controle, as configurações de entrada de dados são o que alimenta os gráficos e tabela, "
+                "que na pratica atua como filtros, onde o usuário pode selecionar informações bem espeficicas, como: "
+                "mome do portal, tipo de publicação, intervalo de datas das publicações etc. ")
+            st.markdown("")
+
+        with col2:
+            st.markdown("<h2 style='font-size:150%; text-align: left; color: #5B51D8;'" +
+                        ">Configurar Gráficos:</h2>",
+                        unsafe_allow_html=True)
+            st.markdown("Também localizado no Painel de Controle, as configurações de Gráficos permitem ao usuário "
+                        "selecionar quais informações deseja visualizar em cada tipo de gráfico, escolhendo entre "
+                        "quais colunas serão Eixo X e Y, e como essas informações serão apresentadas, com valor Total "
+                        "Média, unitario, etc.")
+            st.markdown("")
+
+
+
+        col1, col2 = st.columns([1,1])
+        with col1:
+            st.markdown("<h2 style='font-size:150%; text-align: left; color: #5B51D8;'" +
+                        ">Tabela Interativa:</h2>",
+                        unsafe_allow_html=True)
+            st.markdown(
+                "As tabelas neste App permitem ao usuário filtrar, ordenar e selecionar linhas e colunas especificas.")
+        with col2:
+            st.markdown("<h2 style='font-size:150%; text-align: left; color: #5B51D8;'" +
+                        ">Gráfios Interativos:</h2>",
+                        unsafe_allow_html=True)
+            st.markdown("Os Gráficos apresentam informações complementares quando usuário colocar o mouse em cima dos eixos")
+            st.markdown("")
+
+
+
+        st.markdown("")
 
     inicio =  st.checkbox("Começar analise dos dados")
 
@@ -190,4 +254,8 @@ st.text("")
 st.text("")
 st.text("")
 st.text("")
-rodape()
+st.text("")
+st.text("")
+st.text("")
+
+rodape2()
