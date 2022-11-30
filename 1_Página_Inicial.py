@@ -34,7 +34,7 @@ with st.sidebar:
 
     if opt == "Monitor Manual":
 
-        with st.expander("Configurar entrada de dados"):
+        with st.expander("⚙️ Configurar Dados"):
             all_Nomes = df.Nome.unique().tolist()
             selected_Nomes = st.multiselect("Selecione as contas que deseja analisar:",
                                             options=all_Nomes, default=all_Nomes)
@@ -52,12 +52,10 @@ with st.sidebar:
             slider1, slider2 = st.slider('Data Filtro Index', 0, len(df) - 1, [0, len(df) - 1], 1)
             mask_index = (df['index'] > slider1) & (df['index'] <= slider2)
 
-        with st.expander("Configurar Gráficos"):
-            st.markdown(html_sub1_sidebar, unsafe_allow_html=True)
-
-            graficos = ["Gráfico de Barra", "Gráfico de Linha", "Mapa de Calor", "Nuvem de Palavras"]
-
-            grafico = st.selectbox("Selecione o tipo de Gráfico:", graficos)
+        with st.expander("⚙️ Configurar Dashbords"):
+            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                        ">Gráfico de Barra - Análise Comparativa:</h2>",
+                        unsafe_allow_html=True)
 
             df_x = df[['Nome', 'tipo', 'link', 'dia', 'hora', 'semana', 'Turno']]
             optionx = st.selectbox('Selecione coluna para o Eixo X:', df_x.columns.unique(), index=0)
@@ -69,7 +67,11 @@ with st.sidebar:
             formato = st.radio("Selecione o formato para o Eixo Y:",
                                options=["Total de Atividades", "Média de Atividades", "Atividades por Publicação"])
 
-            ##################################
+            st.markdown("""---""")
+            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                        ">Gráfico de Linha - Análise Temporal:</h2>",
+                        unsafe_allow_html=True)
+
             df_x_linha = df[['descricao', 'link', 'time', 'dia']]
             optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
                                          df_x_linha.columns.unique(), index=2, key=11)
@@ -77,7 +79,11 @@ with st.sidebar:
             df_y_linha = df[['likes', 'comentarios', 'inter']]
             optiony_linha = st.selectbox('Selecione coluna para o Eixo Y:',
                                          df_y_linha.columns.unique(), index=0, key=12)
-            st.markdown("")
+
+            st.markdown("""---""")
+            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                        ">Mapa de Calor - Análise por Matriz:</h2>",
+                        unsafe_allow_html=True)
 
             formato_linha = st.radio("Selecione o formato para o Eixo Y:",
                                      options=["Total de Atividades", "Média de Atividades",
@@ -86,6 +92,12 @@ with st.sidebar:
             df_heatmap = df[['likes', 'comentarios', 'inter']]
             option_heatmap = st.selectbox('Selecione a variável para o Mapa de Calor:',
                                           df_heatmap.columns.unique(), index=0)
+
+            st.markdown("""---""")
+            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                        ">Nuvem de Palavras - Análise de Frequência:</h2>",
+                        unsafe_allow_html=True)
+
 
     elif opt == "Monitor Desenvolvido":
 
@@ -111,7 +123,7 @@ if opt == "Monitor Manual":
     topo1()
     st.markdown("""---""")
 
-    with st.expander("PRIMEIRA VEZ AQUI?"):
+    with st.expander("👀 Sua primeira vez? Comece a explorar por aqui!"):
 
         st.markdown("O Data App é uma Aplicativo focado na análise e exploração de dados, está aplicacação "
                     "trabalha com dados das publicações dos maiores portais de noticias do Brasil, onde cada linha "
@@ -168,7 +180,7 @@ if opt == "Monitor Manual":
 
         st.markdown("")
 
-    inicio =  st.checkbox("Começar analise dos dados")
+    inicio =  st.checkbox("Ativar Monitor Manual")
 
     if inicio:
         df = df[df.Nome.isin(selected_Nomes)]
