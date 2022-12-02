@@ -16,15 +16,11 @@ from st_aggrid.shared import GridUpdateMode
 from outros.variaveis_folha import *
 
 # CARREGANDO OS DADOS:
+
 @st.cache(allow_output_mutation=True)
 def get_data( path_posts ):
     df = pd.read_csv( path_posts )
     return df
-
-def get_data_comentarios( path_comentarios ):
-    df_com = pd.read_csv( path_comentarios )
-    return df_com
-
 
 def tratamento_dados2(df):
     df['conta'] = np.where(df['likes'] == 2, 0, 1)
@@ -50,6 +46,7 @@ im3 = Image.open("image/comentario.png")
 ### GRAFICO INDICADOR - MÉTRICAS GLOBAIS, LIKES E COMENTÁRIOS
 # DADOS DE ENTRADA:
 
+@st.cache(suppress_st_warning=True)
 def metricas(df):
     df_metricas = df.describe().reset_index()
     #GRÁFICO 2:
@@ -128,20 +125,40 @@ def metricas(df):
 
 # CONFIGURANDO GRAFICO INDICADOR 3 -  METRICAS COMENTÁRIOS
 
+@st.cache(suppress_st_warning=True)
 def pie3(df):
 
-    df_type = df.groupby('tipo').agg('sum')
-    IMAGEM = df_type["UNIDADE"].iloc[1]
-    VIDEO = df_type["UNIDADE"].iloc[2]
-    COLECAO = df_type["UNIDADE"].iloc[0]
+    df_type = df.groupby('tipo').agg('sum').reset_index()
+    df_ima = df_type.query("tipo == 'Imagem'")
+    df_col = df_type.query("tipo == 'Coleção'")
+    df_vid = df_type.query("tipo == 'Vídeo'")
 
-    IMAGEM_LIKES = df_type["likes"].iloc[1]
-    VIDEO_LIKES = df_type["likes"].iloc[2]
-    COLECAO_LIKES = df_type["likes"].iloc[0]
+    try:
+        IMAGEM = df_ima["UNIDADE"].iloc[0]
+        IMAGEM_LIKES = df_ima["likes"].iloc[0]
+        IMAGEM_COMENTARIOS = df_ima["comentarios"].iloc[0]
+    except:
+        IMAGEM = 0
+        IMAGEM_LIKES = 0
+        IMAGEM_COMENTARIOS = 0
 
-    IMAGEM_COMENTARIOS = df_type["comentarios"].iloc[1]
-    VIDEO_COMENTARIOS = df_type["comentarios"].iloc[2]
-    COLECAO_COMENTARIOS = df_type["comentarios"].iloc[0]
+    try:
+        VIDEO = df_vid["UNIDADE"].iloc[0]
+        VIDEO_LIKES = df_vid["likes"].iloc[0]
+        VIDEO_COMENTARIOS = df_vid["comentarios"].iloc[0]
+    except:
+        VIDEO = 0
+        VIDEO_LIKES = 0
+        VIDEO_COMENTARIOS = 0
+
+    try:
+        COLECAO = df_col["UNIDADE"].iloc[0]
+        COLECAO_LIKES = df_col["likes"].iloc[0]
+        COLECAO_COMENTARIOS = df_col["comentarios"].iloc[0]
+    except:
+        COLECAO = 0
+        COLECAO_LIKES = 0
+        COLECAO_COMENTARIOS = 0
 
     labels = ['Imagem', "Coleção", 'Vídeo']
     colors = ['#E1306C', '#C13584', '#833AB4']
@@ -181,25 +198,30 @@ def pie3(df):
 ##############################################################################################################
 ###############################################################################################################
 
+@st.cache(suppress_st_warning=True)
 def bar(df):
-    df_week = df.groupby('semana').agg('mean')
-    df_week_soma = df.groupby('semana').agg('sum')
 
-    values = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
-    y_like = [df_week['likes'][0], df_week['likes'][3], df_week['likes'][6], df_week['likes'][1],
-              df_week['likes'][2], df_week['likes'][4], df_week['likes'][5]]
-    y_comments = [df_week['comentarios'][0], df_week['comentarios'][3], df_week['comentarios'][6], df_week['comentarios'][1],
-                  df_week['comentarios'][2], df_week['comentarios'][4], df_week['comentarios'][5]]
-    y_num = [df_week_soma['UNIDADE'][0], df_week_soma['UNIDADE'][3], df_week_soma['UNIDADE'][6], df_week_soma['UNIDADE'][1],
-             df_week_soma['UNIDADE'][2], df_week_soma['UNIDADE'][4], df_week_soma['UNIDADE'][5]]
-    y_num_soma = [df_week_soma['likes'][0], df_week_soma['likes'][3], df_week_soma['likes'][6], df_week_soma['likes'][1],
-                  df_week_soma['likes'][2], df_week_soma['likes'][4], df_week_soma['likes'][5]]
-    y_num_comments = [df_week_soma['comentarios'][0], df_week_soma['comentarios'][3], df_week_soma['comentarios'][6], df_week_soma['comentarios'][1],
-                      df_week_soma['comentarios'][2], df_week_soma['comentarios'][4], df_week_soma['comentarios'][5]]
+    df_ws = df.groupby('semana').agg('sum').reset_index()
+
+    df_ws.loc[df_ws['semana'] == 'Domingo', 'order'] = 1
+    df_ws.loc[df_ws['semana'] == 'Segunda', 'order'] = 2
+    df_ws.loc[df_ws['semana'] == 'Terça', 'order'] = 3
+    df_ws.loc[df_ws['semana'] == 'Quarta', 'order'] = 4
+    df_ws.loc[df_ws['semana'] == 'Quinta', 'order'] = 5
+    df_ws.loc[df_ws['semana'] == 'Sexta', 'order'] = 6
+    df_ws.loc[df_ws['semana'] == 'Sábado', 'order'] = 7
+
+    df_ws = df_ws.sort_values(by=['order'], ascending=True)
+
+    y_num = df_ws['UNIDADE']
+    y_num_soma = df_ws['likes']
+    y_num_comments = df_ws['comentarios']
+
+    values = df_ws.semana.unique()
 
     fig = go.Figure()
     fig.add_trace(go.Bar(
-        name='Likes', x=values, y=y_num_soma ,
+        name='Likes', x=values, y=y_num_soma,
         hovertemplate="</br><b>Total de Likes:</b> %{y:,.0f}",
         textposition='none', marker_color='#E1306C'
     ))
@@ -224,7 +246,7 @@ def bar(df):
     return fig
 
 
-
+@st.cache(suppress_st_warning=True)
 def bar_hora(df):
     df_week = df.groupby('hora').agg('mean').reset_index()
     df_week_soma = df.groupby('hora').agg('sum').reset_index()
@@ -266,7 +288,7 @@ def bar_hora(df):
 
     return fig
 
-
+@st.cache(suppress_st_warning=True)
 def bar_nomes(df):
     df_week_soma = df.groupby('Nome').agg('sum').reset_index()
 
@@ -305,7 +327,7 @@ def bar_nomes(df):
 
     return fig
 
-
+@st.cache(suppress_st_warning=True)
 def linha(df):
 
     df_day = df.groupby('dia').agg('sum').reset_index()
@@ -338,9 +360,170 @@ def linha(df):
     return figB2
 
 
+
+
+def linha_nome(df):
+
+    df['Metropoles'] = np.where(df['Nome'] == 'Metropoles', 1, 0)
+    df['Folha de S.Paulo'] = np.where(df['Nome'] == 'Folha de S.Paulo', 1, 0)
+    df['UOL'] = np.where(df['Nome'] == 'UOL', 1, 0)
+    df['Estadão'] = np.where(df['Nome'] == 'Estadão', 1, 0)
+    df['O Globo'] = np.where(df['Nome'] == 'O Globo', 1, 0)
+    df['CNN Brasil'] = np.where(df['Nome'] == 'CNN Brasil', 1, 0)
+    df['Jovem Pan'] = np.where(df['Nome'] == 'Jovem Pan', 1, 0)
+    df['Portal R7'] = np.where(df['Nome'] == 'Portal R7', 1, 0)
+    df['Portal G1'] = np.where(df['Nome'] == 'Portal G1', 1, 0)
+    df['BBC News'] = np.where(df['Nome'] == 'BBC News', 1, 0)
+
+    #df_day = df.groupby('dia').agg('sum').reset_index()
+
+    df_day = df.groupby(['dia', 'Nome']).agg('sum').reset_index()
+    df_met = df_day.query("Nome == 'Metropoles'")
+    df_fol = df_day.query("Nome == 'Folha de S.Paulo'")
+    df_uol = df_day.query("Nome == 'UOL'")
+    df_est = df_day.query("Nome == 'Estadão'")
+    df_glo = df_day.query("Nome == 'O Globo'")
+    df_cnn = df_day.query("Nome == 'CNN Brasil'")
+    df_jpn = df_day.query("Nome == 'Jovem Pan'")
+    df_pr7 = df_day.query("Nome == 'Portal R7'")
+    df_pg1 = df_day.query("Nome == 'Portal G1'")
+    df_bbc = df_day.query("Nome == 'BBC News'")
+
+    figB2 = go.Figure()
+    figB2.add_trace(go.Scatter(
+        x=df_met['dia'], y=df_met['inter'],
+        name='Metropoles', mode='lines',  hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#C41A1B'), stackgroup='one'))
+
+    figB2.add_trace(go.Scatter(
+        x=df_fol['dia'], y=df_fol['inter'],
+        name='Folha de S.Paulo', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#008B8B'), stackgroup='two'))
+
+    figB2.add_trace(go.Scatter(
+        x=df_uol['dia'], y=df_uol['inter'],
+        name='UOL', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#FECB17'), stackgroup='three'))
+    figB2.add_trace(go.Scatter(
+        x=df_est['dia'], y=df_est['inter'],
+        name='Estadão', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#405DE6'), stackgroup='four'))
+    figB2.add_trace(go.Scatter(
+        x=df_glo['dia'], y=df_glo['inter'],
+        name='O Globo', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#004787'), stackgroup='five'))
+    figB2.add_trace(go.Scatter(
+        x=df_cnn['dia'], y=df_cnn['inter'],
+        name='CNN Brasil', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#ff4500'), stackgroup='six'))
+
+    figB2.add_trace(go.Scatter(
+        x=df_jpn['dia'], y=df_jpn['inter'],
+        name='Jovem Pan', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#2F4F4F'), stackgroup='seven'))
+    figB2.add_trace(go.Scatter(
+        x=df_pr7['dia'], y=df_pr7['inter'],
+        name='Portal R7', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#2bb003'), stackgroup='eight'))
+    figB2.add_trace(go.Scatter(
+        x=df_pg1['dia'], y=df_pg1['inter'],
+        name='Portal G1', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#ff0000'), stackgroup='nine'))
+    figB2.add_trace(go.Scatter(
+        x=df_bbc['dia'], y=df_bbc['inter'],
+        name='BBC News', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#A52A2A'), stackgroup='ten'))
+
+
+    figB2.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        legend=dict(font_size=12, orientation="h", yanchor="top", y=1.40, xanchor="left", x=0.06),
+        height=220, hovermode="x unified", margin=dict(l=1, r=1, b=1, t=1))
+    figB2.update_xaxes(
+        rangeslider_visible=True)
+    figB2.update_yaxes(
+        title_text="Número de Interações", title_font=dict(family='Sans-serif', size=12),
+        tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
+    return figB2
+
+
+def linha_nome2(df):
+
+    df['Metropoles'] = np.where(df['Nome'] == 'Metropoles', 1, 0)
+    df['Folha de S.Paulo'] = np.where(df['Nome'] == 'Folha de S.Paulo', 1, 0)
+    df['UOL'] = np.where(df['Nome'] == 'UOL', 1, 0)
+    df['Estadão'] = np.where(df['Nome'] == 'Estadão', 1, 0)
+    df['O Globo'] = np.where(df['Nome'] == 'O Globo', 1, 0)
+    df['CNN Brasil'] = np.where(df['Nome'] == 'CNN Brasil', 1, 0)
+    df['Jovem Pan'] = np.where(df['Nome'] == 'Jovem Pan', 1, 0)
+    df['Portal R7'] = np.where(df['Nome'] == 'Portal R7', 1, 0)
+    df['Portal G1'] = np.where(df['Nome'] == 'Portal G1', 1, 0)
+    df['BBC News'] = np.where(df['Nome'] == 'BBC News', 1, 0)
+
+    df_day = df.groupby('dia').agg('sum').reset_index()
+
+
+    figB2 = go.Figure()
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['Metropoles'],
+        name='Metropoles', mode='lines',  hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#C41A1B'), stackgroup='one'))
+
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['Folha de S.Paulo'],
+        name='Folha de S.Paulo', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#008B8B'), stackgroup='two'))
+
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['UOL'],
+        name='UOL', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#FECB17'), stackgroup='three'))
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['Estadão'],
+        name='Estadão', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#405DE6'), stackgroup='four'))
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['O Globo'],
+        name='O Globo', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#004787'), stackgroup='five'))
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['CNN Brasil'],
+        name='CNN Brasil', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#ff4500'), stackgroup='six'))
+
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['Jovem Pan'],
+        name='Jovem Pan', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#2F4F4F'), stackgroup='seven'))
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['Portal R7'],
+        name='Portal R7', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#2bb003'), stackgroup='eight'))
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['Portal G1'],
+        name='Portal G1', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#ff0000'), stackgroup='nine'))
+    figB2.add_trace(go.Scatter(
+        x=df_day['dia'], y=df_day['BBC News'],
+        name='BBC News', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
+        line=dict(width=2, color='#A52A2A'), stackgroup='ten'))
+
+
+    figB2.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        legend=dict(font_size=12, orientation="h", yanchor="top", y=1.40, xanchor="left", x=0.06),
+        height=220, hovermode="x unified", margin=dict(l=1, r=1, b=1, t=1))
+    figB2.update_xaxes(
+        rangeslider_visible=True)
+    figB2.update_yaxes(
+        title_text="Número de Interações", title_font=dict(family='Sans-serif', size=12),
+        tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
+    return figB2
+
+
 #############################################################################################################
 #####################################################################################################3########
-
+@st.cache(suppress_st_warning=True)
 def map(df):
 
     df_map = df.groupby(['semana', 'Turno']).agg('sum').reset_index()
@@ -418,7 +601,6 @@ plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis('off') # to off the axis of x and
 
 
-
 def folha_tabela(df):
 
     gb = GridOptionsBuilder.from_dataframe(df)
@@ -452,9 +634,8 @@ def simple_aggrid(df):
 
 def plot_bar(formato, selected_rows, optionx, optiony):
     fig = go.Figure()
-    if formato == "Total de Atividades":
-        df_sum = selected_rows.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx,
-                                                                                                  ascending=True)
+    if formato == "Total":
+        df_sum = selected_rows.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx, ascending=True)
         df_quant = selected_rows[optionx].value_counts().reset_index().sort_values(by="index", ascending=True)
         x1 = df_sum[optionx]
         y1 = df_sum[optiony]
@@ -465,9 +646,9 @@ def plot_bar(formato, selected_rows, optionx, optiony):
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
                           "</br><b>Publicações:</b> %{text}",
-            textposition='none', marker_color=('#E1306C')))
+            textposition='none', marker_color=('#C13584')))
 
-    elif formato == "Média de Atividades":
+    elif formato == "Média":
 
         df_mean = selected_rows.groupby([optionx])[optiony].agg('mean').reset_index().sort_values(optionx,
                                                                                                   ascending=True)
@@ -481,9 +662,9 @@ def plot_bar(formato, selected_rows, optionx, optiony):
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
                           "</br><b>Publicações:</b> %{text}",
-            textposition='none', marker_color=('#E1306C')))
+            textposition='none', marker_color=('#F56040')))
 
-    elif formato == "Atividades por Publicação":
+    elif formato == "Por Publicação":
         selected_rows = selected_rows.sort_values(optionx, ascending=True)
         x = selected_rows[optionx]
         y = selected_rows[optiony]
@@ -511,11 +692,24 @@ def plot_bar(formato, selected_rows, optionx, optiony):
 
 
 
-def plot_line(selected_rows, optionx, optiony):
+def plot_line(selected_rows, optionx, optiony, formato):
+
+
     fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=selected_rows[optionx], y=selected_rows[optiony],
-        mode='lines', stackgroup='one', hovertemplate=None, line=dict(width=1, color='#4169E1')))
+    if formato == "Total":
+        df_temp = selected_rows.groupby([optionx]).agg('sum').reset_index()
+
+        fig.add_trace(go.Scatter(
+            x=df_temp[optionx], y=df_temp[optiony],
+            mode='lines', stackgroup='one', hovertemplate=None, line=dict(width=1, color='#C13584')))
+
+    elif formato == "Média":
+        df_temp = selected_rows.groupby([optionx]).agg('mean').reset_index()
+
+        fig.add_trace(go.Scatter(
+            x=df_temp[optionx], y=df_temp[optiony],
+            mode='lines', stackgroup='one', hovertemplate=None, line=dict(width=1, color='#F56040')))
+
     fig.update_layout(
         paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
         height=400, hovermode="x unified", margin=dict(l=10, r=10, b=1, t=10))
@@ -529,8 +723,12 @@ def plot_line(selected_rows, optionx, optiony):
     return fig
 
 
-def plot_hotmap(df, formato):
-    df_map = df.groupby(['semana', 'Turno']).agg('sum').reset_index()
+def plot_hotmap(df, formato, formato_map):
+    if formato_map == "Total":
+        df_map = df.groupby(['semana', 'Turno']).agg('sum').reset_index()
+
+    elif formato_map == "Média":
+        df_map = df.groupby(['semana', 'Turno']).agg('mean').reset_index()
 
     dom_MN = df_map[formato].iloc[1]; dom_TD = df_map[formato].iloc[3]; dom_NT = df_map[formato].iloc[2]; dom_MD = df_map[formato].iloc[0];
     qua_MN = df_map[formato].iloc[5]; qua_TD = df_map[formato].iloc[7]; qua_NT = df_map[formato].iloc[6]; qua_MD = df_map[formato].iloc[4];
