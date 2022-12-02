@@ -65,8 +65,8 @@ with st.sidebar:
                                                  options=all_semana, default=all_semana,
                                                  help='Use para filtrar os dias da semana no banco de dados.')
 
-            hora_max = df["hora"].max()
-            hora_min = df["hora"].min()
+            hora_max = 0
+            hora_min = 23
             slider1, slider2 = st.slider('Selecione o intervalo de horas:', hora_min, hora_max,
                                          [hora_min, hora_max], 1,
                                          help='Use para filtrar o intervalo de horas no banco de dados.')
