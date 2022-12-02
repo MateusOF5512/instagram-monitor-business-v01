@@ -33,21 +33,13 @@ config={"displayModeBar": True,
                                    'pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d',
                                    'hoverClosestCartesian', 'hoverCompareCartesian']}
 
+
 def folha_posts(df):
-
-    st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'"+
-                ">Tabela com dados das publicações do Instagram:</h1>",
-                unsafe_allow_html=True)
-    simple_aggrid(df)
-
-    st.text("")
-    st.text("")
-
 
     col2A, col3A, col4A = st.columns([520, 60, 520])
     with col2A:
         st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                    ">Indicadores Chaves</h1>",
+                    ">Indicadores Chaves: <i>"+str(len(df))+" publicações</i></h1>",
                     unsafe_allow_html=True)
         fig1, fig2 = metricas(df)
         st.plotly_chart(fig1, use_container_width=True, config=config)
@@ -64,10 +56,22 @@ def folha_posts(df):
     st.text("")
     st.text("")
 
+
+    st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                ">Número de Publicações por Nome - análise diária</h1>", unsafe_allow_html=True)
+    fig2 = linha_nome2(df)
+    st.plotly_chart(fig2, use_container_width=True, config=config)
+
+    st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                ">Total de Interações por Nome - análise diária</h1>", unsafe_allow_html=True)
+    fig = linha_nome(df)
+    st.plotly_chart(fig, use_container_width=True, config=config)
+
+
     col2, col3, col4 = st.columns([520, 60, 520])
     with col2:
         st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                    ">Análise Temporal</h1>",
+                    ">Total de atividades de todos os portais</h1>",
                     unsafe_allow_html=True)
         figB2 = linha(df)
         st.plotly_chart(figB2, use_container_width=True, config=config)
@@ -77,6 +81,7 @@ def folha_posts(df):
         st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
                     ">Comparação entre os Portais</h1>",
                     unsafe_allow_html=True)
+
         figB1 = bar_nomes(df)
         st.plotly_chart(figB1, use_container_width=True, config=config)
 
@@ -103,21 +108,39 @@ def folha_posts(df):
     st.text("")
     st.text("")
 
-    col2, col3, col4 = st.columns([520, 60, 520])
-    with col2:
-        st.markdown("<h1 style='font-size:140%; text-align: center; color: #5B51D8;'" +
-                    ">Número de Publicações por Turno e Dia da Semana</h1>",
-                    unsafe_allow_html=True)
-        figC1, figC2 = map(df)
 
-        st.plotly_chart(figC1, use_container_width=True, config=config)  # GRÁFICO DE BARRA HORIZONTAL
-    with col3:
-        st.text("")
-    with col4:
-        st.markdown("<h1 style='font-size:143%; text-align: center; color: #5B51D8;'" +
-                    ">Número de Interações por Turno e Dia da Semana</h1>",
-                    unsafe_allow_html=True)
-        st.plotly_chart(figC2, use_container_width=True, config=config)  # GRÁFICO DE BARRA HORIZONTAL
+    col2, col3, col4 = st.columns([520, 60, 520])
+    try:
+        figC1, figC2 = map(df)
+        with col2:
+            st.markdown("<h1 style='font-size:140%; text-align: center; color: #5B51D8;'" +
+                        ">Número de Publicações por Turno e Dia da Semana</h1>",
+                        unsafe_allow_html=True)
+            st.plotly_chart(figC1, use_container_width=True, config=config)  # GRÁFICO DE BARRA HORIZONTAL
+        with col3:
+            st.text("")
+        with col4:
+            st.markdown("<h1 style='font-size:143%; text-align: center; color: #5B51D8;'" +
+                        ">Número de Interações por Turno e Dia da Semana</h1>",
+                        unsafe_allow_html=True)
+            st.plotly_chart(figC2, use_container_width=True, config=config)
+    except:
+        with col2:
+            st.markdown("<h1 style='font-size:140%; text-align: center; color: #5B51D8;'" +
+                        ">Número de Publicações por Turno e Dia da Semana</h1>",
+                        unsafe_allow_html=True)
+            st.warning(
+                'Os dodos selecionados são insuficientes par gerar o Mapa de calor, por favor adcione mais dados!',
+                icon="⚠️")
+        with col3:
+            st.text("")
+        with col4:
+            st.markdown("<h1 style='font-size:143%; text-align: center; color: #5B51D8;'" +
+                        ">Número de Interações por Turno e Dia da Semana</h1>",
+                        unsafe_allow_html=True)
+            st.warning(
+                'Os dodos selecionados são insuficientes par gerar o Mapa de calor, por favor adcione mais dados!',
+                icon="⚠️")
 
     st.text("")
     return None
