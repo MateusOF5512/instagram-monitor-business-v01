@@ -70,7 +70,7 @@ with st.sidebar:
             slider1, slider2 = st.slider('Selecione o intervalo de horas:', hora_min, hora_max,
                                          [hora_min, hora_max], 1,
                                          help='Use para filtrar o intervalo de horas no banco de dados.')
-            mask_hora_perz = (df['hora'] >= slider1) & (df['hora'] <= slider2)
+            mask_hora_perz = (df['hora'] > slider1) & (df['hora'] <= slider2)
 
 
 
