@@ -28,6 +28,7 @@ df = df[['Nome', 'time', 'descricao', 'likes', 'comentarios', 'inter', 'tipo', '
 
 
 
+
 with st.sidebar:
     st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8; padding: 0px 0px;'" +
                 ">Painel de Controle</h1>",
@@ -165,7 +166,7 @@ if opt == "📈 Dashbords":
                             ">Gráfico de Linha - Análise Temporal:</h2>",
                             unsafe_allow_html=True)
 
-                df_x_linha = df[['time', 'dia', 'link']]
+                df_x_linha = df[['time', 'dia', 'hora']]
                 optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
                                              df_x_linha.columns.unique(), index=1, key=72)
 
@@ -346,7 +347,7 @@ elif opt == "🔎 Laboratório":
                             ">Gráfico de Linha - Análise Temporal:</h2>",
                             unsafe_allow_html=True)
 
-                df_x_linha = df[['time', 'dia', 'link']]
+                df_x_linha = df[['time', 'dia', 'hora']]
                 optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
                                              df_x_linha.columns.unique(), index=1, key=11)
 
@@ -381,16 +382,29 @@ elif opt == "🔎 Laboratório":
             st.plotly_chart(fig3A2, use_container_width=True)
 
             with st.expander("🔎️   Dados - Análise Comparativa"):
-                col1, col2 = st.columns([1, 1])
-                df_sum = df_select.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx,
-                                                                                                    ascending=True)
+                if formato == "Total":
+                    df_linha = df_select.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx,
+                                                                                                        ascending=True)
+                    df_linha.loc[:, optiony] = df_linha[optiony].map('{:,.0f}'.format)
+                elif formato == "Média":
+                    df_linha = df_select.groupby([optionx])[optiony].agg('mean').reset_index().sort_values(optionx,
+                                                                                                        ascending=True)
+                    df_linha[optiony] = df_linha[optiony].astype(int)
+                    df_linha.loc[:, optiony] = df_linha[optiony].map('{:,.0f}'.format)
+                else:
+                    df_linha = df_select.sort_values(optionx, ascending=True)
 
                 checkdf = st.checkbox('Visualizar Dados', key=50)
                 if checkdf:
-                    simple_aggrid(df_sum)
+                    df_linha = df_linha[[optionx, optiony]]
 
-                df_sum = df_sum.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Dados", data=df_sum,
+                    st.markdown("<h3 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                                "><i>" + formato + "</i> de <i>" + optiony + "</i> por <i>" + optionx + "</i> - TABELA RESUMIDA</h3>",
+                                unsafe_allow_html=True)
+                    simple_aggrid(df_linha)
+
+                df_linha = df_linha.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Dados", data=df_linha,
                                            file_name="DataApp_Analise_Comparativa.csv", mime='text/csv')
 
             st.markdown("""---""")
@@ -404,11 +418,20 @@ elif opt == "🔎 Laboratório":
             st.plotly_chart(fig3, use_container_width=True)
 
             with st.expander("🔎️   Dados - Análise de Disperção"):
-                df_gp = df_select.groupby(formato_bolha).agg('sum').reset_index()
+                if formato_bolha2 == "Total":
+                    df_gp = df_select.groupby(formato_bolha).agg('sum').reset_index()
+                elif formato_bolha2 == "Média":
+                    df_gp = df_select.groupby(formato_bolha).agg('mean').reset_index()
+
                 df_gp = df_gp[[formato_bolha, optionx_bolha, optiony_bolha]]
+                df_gp.loc[:, optionx_bolha] = df_gp[optionx_bolha].map('{:,.0f}'.format)
+                df_gp.loc[:, optiony_bolha] = df_gp[optiony_bolha].map('{:,.0f}'.format)
 
                 checkdf = st.checkbox('Visualizar Dados', key=54)
                 if checkdf:
+                    st.markdown("<h3 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                                "><i>" + formato_bolha + "</i> de <i>" + optionx_bolha + "</i> e <i>" + optiony_bolha + "</i> - TABELA RESUMIDA</h3>",
+                                unsafe_allow_html=True)
                     simple_aggrid(df_gp)
 
                 df_gp = df_gp.to_csv(index=False).encode('utf-8')
