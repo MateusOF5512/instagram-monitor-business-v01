@@ -649,10 +649,10 @@ def plot_bar(formato, selected_rows, optionx, optiony):
         quant = df_quant[optionx]
 
         fig.add_trace(go.Bar(
-            x=x1, y=y1, text=quant,
+            x=x1, y=y1, text=quant, name="",
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
-                          "</br><b>Publicações:</b> %{text}",
+                          "</br><b>Publicações:</b> %{text:,.0f}",
             textposition='none', marker_color=('#C13584')))
 
     elif formato == "Média":
@@ -665,10 +665,10 @@ def plot_bar(formato, selected_rows, optionx, optiony):
         quant = df_quant[optionx]
 
         fig.add_trace(go.Bar(
-            x=x1, y=y1, text=quant,
+            x=x1, y=y1, text=quant, name="",
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
-                          "</br><b>Publicações:</b> %{text}",
+                          "</br><b>Publicações:</b> %{text:,.0f}",
             textposition='none', marker_color=('#F56040')))
 
     elif formato == "Por Publicação":
@@ -678,10 +678,10 @@ def plot_bar(formato, selected_rows, optionx, optiony):
         text = selected_rows["link"]
 
         fig.add_trace(go.Bar(
-            x=x, y=y, text=text,
+            x=x, y=y, text=text, name="",
             hovertemplate="</br><b>Eixo X:</b> %{x}" +
                           "</br><b>Eixo Y:</b> %{y:,.0f}" +
-                          "</br><b>Linkmap:</b> %{text}",
+                          "</br><b>Link:</b> %{text}",
             textposition='none', marker_color=('#4B0082')))
 
     fig.update_layout(
@@ -698,6 +698,81 @@ def plot_bar(formato, selected_rows, optionx, optiony):
     return fig
 
 
+def plot_bolha(formato, formato2, selected_rows, optionx, optiony):
+
+    fig = go.Figure()
+    if formato2 == "Total":
+        if formato == 'link' or formato == 'ID post':
+            df_gp = selected_rows.groupby(formato).agg('sum').reset_index()
+            fig.add_trace(go.Scatter(x=df_gp[optionx], y=df_gp[optiony], customdata=df_gp[formato],
+                                     mode='markers', text=df_gp['UNIDADE'], name='',
+                                     hovertemplate="</br><b>Likes:</b> %{x:,.0f}" +
+                                                   "</br><b>Comentários:</b> %{y:,.0f}"
+                                                   "</br><b>Instagram:</b> %{customdata}" +
+                                                   "</br><b>Publicação:</b> %{text}",
+                                     marker=dict(
+                                         size=20,
+                                         color=df_gp['inter'],
+                                         colorscale='Portland',
+                                         showscale=True)
+                                     ))
+        else:
+            df_gp = selected_rows.groupby(formato).agg('sum').reset_index()
+            fig.add_trace(go.Scatter(x=df_gp[optionx], y=df_gp[optiony], customdata=df_gp[formato],
+                                     mode='markers', text=df_gp['UNIDADE'], name='',
+                                     hovertemplate="</br><b>Agrupamento:</b> %{customdata}" +
+                                                   "</br><b>Likes:</b> %{x:,.0f}" +
+                                                   "</br><b>Comentários:</b> %{y:,.0f}" +
+                                                   "</br><b>Publicações:</b> %{text}",
+                                     marker=dict(
+                                         size=(df_gp['UNIDADE']/20),
+                                         color=df_gp['inter'],
+                                         colorscale='Portland',
+                                         showscale=True)
+                                     ))
+    elif formato2 == "Média":
+        if formato == 'link' or formato == 'ID post':
+            df_gp = selected_rows.groupby(formato).agg('mean').reset_index()
+            fig.add_trace(go.Scatter(x=df_gp[optionx], y=df_gp[optiony], customdata=df_gp[formato],
+                                     mode='markers', text=df_gp['UNIDADE'], name='',
+                                     hovertemplate="</br><b>Likes:</b> %{x:,.0f}" +
+                                                   "</br><b>Comentários:</b> %{y:,.0f}"
+                                                   "</br><b>Instagram:</b> %{customdata}" +
+                                                   "</br><b>Publicação:</b> %{text}",
+                                     marker=dict(
+                                         size=20,
+                                         color=df_gp['inter'],
+                                         colorscale='Portland',
+                                         showscale=True)
+                                     ))
+        else:
+            df_gp = selected_rows.groupby(formato).agg('mean').reset_index()
+            fig.add_trace(go.Scatter(x=df_gp[optionx], y=df_gp[optiony], customdata=df_gp[formato],
+                                     mode='markers', text=df_gp['UNIDADE'], name='',
+                                     hovertemplate="</br><b>Agrupamento:</b> %{customdata}" +
+                                                   "</br><b>Likes:</b> %{x:,.0f}" +
+                                                   "</br><b>Comentários:</b> %{y:,.0f}" +
+                                                   "</br><b>Publicações:</b> %{text}",
+                                     marker=dict(
+                                         size=40,
+                                         color=df_gp['inter'],
+                                         colorscale='Portland',
+                                         showscale=True)
+                                     ))
+
+
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        height=400, margin=dict(l=20, r=20, b=20, t=20))
+    fig.update_xaxes(
+        title_text="Eixo X: "+optionx, title_font=dict(family='Sans-serif', size=18), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=12), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+    fig.update_yaxes(
+        title_text="Eixo Y: "+optiony, title_font=dict(family='Sans-serif', size=20), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+
+    return fig
+
 
 def plot_line(selected_rows, optionx, optiony, formato):
 
@@ -708,14 +783,14 @@ def plot_line(selected_rows, optionx, optiony, formato):
 
         fig.add_trace(go.Scatter(
             x=df_temp[optionx], y=df_temp[optiony],
-            mode='lines', stackgroup='one', hovertemplate=None, line=dict(width=1, color='#C13584')))
+            mode='lines', hovertemplate=None, line=dict(width=3, color='#C13584')))
 
     elif formato == "Média":
         df_temp = selected_rows.groupby([optionx]).agg('mean').reset_index()
 
         fig.add_trace(go.Scatter(
             x=df_temp[optionx], y=df_temp[optiony],
-            mode='lines', stackgroup='one', hovertemplate=None, line=dict(width=1, color='#F56040')))
+            mode='lines', hovertemplate=None, line=dict(width=3, color='#F56040')))
 
     fig.update_layout(
         paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
