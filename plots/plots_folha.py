@@ -794,10 +794,20 @@ def plot_line(selected_rows, optionx, optiony, formato):
 
     fig.update_layout(
         paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
-        height=400, hovermode="x unified", margin=dict(l=10, r=10, b=1, t=10))
+        height=400, hovermode="x unified", margin=dict(l=10, r=10, b=20, t=20))
     fig.update_xaxes(
         title_text="Eixo X: "+optionx, title_font=dict(family='Sans-serif', size=18),
-        tickfont=dict(family='Sans-serif', size=12),  showgrid=False, rangeslider_visible=True)
+        tickfont=dict(family='Sans-serif', size=12),  showgrid=False, rangeslider_visible=True,
+        rangeselector=dict(
+            buttons=list([
+                dict(count=5, label="5D", step="day", stepmode="backward"),
+                dict(count=15, label="15D", step="day", stepmode="backward"),
+                dict(count=1, label="1M", step="month", stepmode="backward"),
+                dict(count=2, label="2M", step="month", stepmode="backward"),
+                dict(label="TUDO", step="all")
+            ])
+        )
+    )
     fig.update_yaxes(
         title_text="Eixo Y: "+optiony, title_font=dict(family='Sans-serif', size=20),
         tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
