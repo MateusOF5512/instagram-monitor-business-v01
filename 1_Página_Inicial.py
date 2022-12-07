@@ -35,97 +35,12 @@ with st.sidebar:
 
     st.markdown("""---""")
 
-    opt = st.radio("Navegação entre Páginas:", ("Monitor Personalizado", "Monitor Manual"),
+    opt = st.radio("Navegação:", ("📈 Dashbords", "🔎 Laboratório"),
                    index=0, help="Use para navegar entre as diferentes páginas do App")
     st.markdown("""---""")
 
 
-    if opt == "Monitor Personalizado":
-
-        with st.expander("⚙️ Configurar Dados"):
-            all_Nomes_perz = df.Nome.unique().tolist()
-            selected_Nome_perz = st.multiselect("Selecione as contas que deseja analisar:",
-                                                options=all_Nomes_perz, default=all_Nomes_perz,
-                                                help='Use para filtrar os nomes das contas no banco de dados.')
-
-            all_tipos = df.tipo.unique().tolist()
-            selected_tipos_perz = st.multiselect("Selecione os tipos das publicações:",
-                                                 options=all_tipos, default=all_tipos,
-                                                help='Use para filtrar os tipos de publicações no banco de dados.')
-
-            df["dia_"] = pd.to_datetime(df["dia"]).dt.date
-            data_start = df["dia_"].unique().max()
-            data_end = df["dia_"].unique().min()
-            date_min, date_max = st.date_input("Selecione o intervalo de datas:", (data_end, data_start),
-                                                help='Use para filtrar o intervalo de datas no banco de dados.')
-            mask_data_perz = (df['dia_'] > date_min) & (df['dia_'] <= date_max)
-
-            all_semana = df.semana.unique().tolist()
-            selected_semana_perz = st.multiselect("Selecione os dias da semana:",
-                                                 options=all_semana, default=all_semana,
-                                                 help='Use para filtrar os dias da semana no banco de dados.')
-
-            hora_max = 0
-            hora_min = 23
-            slider1, slider2 = st.slider('Selecione o intervalo de horas:', hora_min, hora_max,
-                                         [hora_min, hora_max], 1,
-                                         help='Use para filtrar o intervalo de horas no banco de dados.')
-            mask_hora_perz = (df['hora'] > slider1) & (df['hora'] <= slider2)
-
-
-
-        with st.expander("⚙️ Configurar Dashbords"):
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Gráfico de Barra - Análise Comparativa:</h2>",
-                        unsafe_allow_html=True)
-
-            df_x = df[['Nome', 'tipo', 'link', 'dia', 'hora', 'semana', 'Turno']]
-            optionx = st.selectbox('Selecione coluna para o Eixo X:', df_x.columns.unique(), index=0)
-
-            df_y = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
-            optiony = st.selectbox('Selecione coluna para o Eixo Y:', df_y.columns.unique(), index=0, key=71)
-            st.markdown("")
-
-            formato = st.radio("Selecione o formato do Gráfico:",
-                               options=["Total", "Média", "Por Publicação"], horizontal=True)
-
-            st.markdown("""---""")
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Gráfico de Linha - Análise Temporal:</h2>",
-                        unsafe_allow_html=True)
-
-            df_x_linha = df[['time', 'dia', 'link']]
-            optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
-                                         df_x_linha.columns.unique(), index=1, key=72)
-
-            df_y_linha = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
-            optiony_linha = st.selectbox('Selecione coluna para o Eixo Y:',
-                                         df_y_linha.columns.unique(), index=0, key=73)
-
-            formato_linha = st.radio("Selecione o formato do Gráfico:",
-                                     options=["Total", "Média"], key=74, horizontal=True)
-
-            st.markdown("""---""")
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Mapa de Calor - Análise por Matriz:</h2>",
-                        unsafe_allow_html=True)
-
-
-            df_heatmap = df[['likes', 'comentarios', 'inter',  'UNIDADE']]
-            option_heatmap = st.selectbox('Selecione a variável do Gráfico:',
-                                          df_heatmap.columns.unique(), index=0)
-
-            formato_map = st.radio("Selecione o formato do Gráfico:",
-                                     options=["Total", "Média"], key=14, horizontal=True)
-
-            st.markdown("""---""")
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Nuvem de Palavras - Análise de Frequência:</h2>",
-                        unsafe_allow_html=True)
-
-
-
-    if opt == "Monitor Manual":
+    if opt == "🔎 Laboratório":
         with st.expander("⚙️ Configurar Dados"):
             all_Nomes = df.Nome.unique().tolist()
             selected_Nomes = st.multiselect("Selecione as contas que deseja analisar:",
@@ -192,19 +107,13 @@ with st.sidebar:
             st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
                         ">Nuvem de Palavras - Análise de Frequência:</h2>",
                         unsafe_allow_html=True)
+        rodape1()
 
 
-    st.text("")
-    st.text("")
-    st.text("")
-    st.text("")
-    st.text("")
 
 
-    rodape1()
 
-
-if opt == "Monitor Personalizado":
+if opt == "📈 Dashbords":
 
     st.markdown("<h1 style='font-size:220%; text-align: center; color: #5B51D8; padding: 0px 20px;'" +
                 ">Data App - Instagram Monitore</h1>",
@@ -214,12 +123,8 @@ if opt == "Monitor Personalizado":
                 unsafe_allow_html=True)
     st.markdown("""---""")
 
-
-    df = df[df.Nome.isin(selected_Nome_perz)]
-    df = df[df.tipo.isin(selected_tipos_perz)]
-    df = df[df.semana.isin(selected_semana_perz)]
-    df = df.loc[mask_data_perz]
-    df_select = df.loc[mask_hora_perz]
+    st.markdown(html_card_1, unsafe_allow_html=True)
+    st.text("")
 
 
     with st.expander("👀 Sua primeira vez? Comece a explorar por aqui!"):
@@ -275,27 +180,117 @@ if opt == "Monitor Personalizado":
             st.markdown("Os Gráficos apresentam informações complementares quando usuário colocar o mouse em cima dos eixos")
             st.markdown("")
 
-    inicio_personalizado = st.checkbox("Ativar Monitor Personalizado")
+    inicio_personalizado = st.checkbox("Ativar Dashboads 📈 ")
+
+
+    with st.sidebar:
+
+        if inicio_personalizado:
+
+            with st.expander("⚙️ Configurar Dados"):
+                all_Nomes_perz = df.Nome.unique().tolist()
+                selected_Nome_perz = st.multiselect("Selecione as contas que deseja analisar:",
+                                                    options=all_Nomes_perz, default=all_Nomes_perz,
+                                                    help='Use para filtrar os nomes das contas no banco de dados.')
+
+                all_tipos = df.tipo.unique().tolist()
+                selected_tipos_perz = st.multiselect("Selecione os tipos das publicações:",
+                                                     options=all_tipos, default=all_tipos,
+                                                     help='Use para filtrar os tipos de publicações no banco de dados.')
+
+                df["dia_"] = pd.to_datetime(df["dia"]).dt.date
+                data_start = df["dia_"].unique().max()
+                data_end = df["dia_"].unique().min()
+                date_min, date_max = st.date_input("Selecione o intervalo de datas:", (data_end, data_start),
+                                                   help='Use para filtrar o intervalo de datas no banco de dados.')
+                mask_data_perz = (df['dia_'] > date_min) & (df['dia_'] <= date_max)
+
+                all_semana = df.semana.unique().tolist()
+                selected_semana_perz = st.multiselect("Selecione os dias da semana:",
+                                                      options=all_semana, default=all_semana,
+                                                      help='Use para filtrar os dias da semana no banco de dados.')
+
+                hora_max = 0
+                hora_min = 23
+                slider1, slider2 = st.slider('Selecione o intervalo de horas:', hora_min, hora_max,
+                                             [hora_min, hora_max], 1,
+                                             help='Use para filtrar o intervalo de horas no banco de dados.')
+                mask_hora_perz = (df['hora'] >= slider1) & (df['hora'] <= slider2)
+
+            with st.expander("⚙️ Configurar Dashbords"):
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Gráfico de Barra - Análise Comparativa:</h2>",
+                            unsafe_allow_html=True)
+
+                df_x = df[['Nome', 'tipo', 'link', 'dia', 'hora', 'semana', 'Turno']]
+                optionx = st.selectbox('Selecione coluna para o Eixo X:', df_x.columns.unique(), index=0)
+
+                df_y = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                optiony = st.selectbox('Selecione coluna para o Eixo Y:', df_y.columns.unique(), index=0, key=71)
+                st.markdown("")
+
+                formato = st.radio("Selecione o formato do Gráfico:",
+                                   options=["Total", "Média", "Por Publicação"], horizontal=True)
+
+                st.markdown("""---""")
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Gráfico de Linha - Análise Temporal:</h2>",
+                            unsafe_allow_html=True)
+
+                df_x_linha = df[['time', 'dia', 'link']]
+                optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
+                                             df_x_linha.columns.unique(), index=1, key=72)
+
+                df_y_linha = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                optiony_linha = st.selectbox('Selecione coluna para o Eixo Y:',
+                                             df_y_linha.columns.unique(), index=0, key=73)
+
+                formato_linha = st.radio("Selecione o formato do Gráfico:",
+                                         options=["Total", "Média"], key=74, horizontal=True)
+
+                st.markdown("""---""")
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Mapa de Calor - Análise por Matriz:</h2>",
+                            unsafe_allow_html=True)
+
+                df_heatmap = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                option_heatmap = st.selectbox('Selecione a variável do Gráfico:',
+                                              df_heatmap.columns.unique(), index=0)
+
+                formato_map = st.radio("Selecione o formato do Gráfico:",
+                                       options=["Total", "Média"], key=14, horizontal=True)
+
+                st.markdown("""---""")
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Nuvem de Palavras - Análise de Frequência:</h2>",
+                            unsafe_allow_html=True)
+
+                rodape1()
+
+
+            df = df[df.Nome.isin(selected_Nome_perz)]
+            df = df[df.tipo.isin(selected_tipos_perz)]
+            df = df[df.semana.isin(selected_semana_perz)]
+            df = df.loc[mask_data_perz]
+            df_select = df.loc[mask_hora_perz]
+
+        elif inicio_personalizado:
+            df_select =  df
+
 
     if inicio_personalizado:
 
-        st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                    ">Tabela Interativa: <i>" + str((len(df_select))) + "</i> publicações em análise</h1>",
-                    unsafe_allow_html=True)
 
-        selected_rows = folha_tabela(df_select)
 
-        if len(selected_rows) != 0:
-            folha_posts(selected_rows)
+        folha_posts(df_select)
 
-        elif len(selected_rows) == 0:
-            folha_posts(df_select)
+
 
 
 
 ###########################################################################################
 
-elif opt == "Monitor Manual":
+elif opt == "🔎 Laboratório":
     #topo1()
     st.markdown("<h1 style='font-size:220%; text-align: center; color: #5B51D8; padding: 0px 20px;'" +
                     ">Data App - Instagram Monitore</h1>",
@@ -359,7 +354,7 @@ elif opt == "Monitor Manual":
             st.markdown("Os Gráficos apresentam informações complementares quando usuário colocar o mouse em cima dos eixos")
             st.markdown("")
 
-    inicio_manual = st.checkbox("Ativar Monitor Manual")
+    inicio_manual = st.checkbox("Ativar Laboratório 🔎")
     if inicio_manual:
 
         st.markdown("")
