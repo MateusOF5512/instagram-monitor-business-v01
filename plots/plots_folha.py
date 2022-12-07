@@ -66,21 +66,21 @@ def metricas(df):
     fig1.add_trace(go.Indicator(
         mode="number",
         number_font_size=22,
-        number_font_color="#FD1D1D",
+        number_font_color="#E1306C",
         value=soma_post_like,
         title={"text": "<span style='font-size:16px;color:black'>Total:</span>"},
         domain = {'y': [0, 1], 'x': [0.2, 0.5]}))
     fig1.add_trace(go.Indicator(
         mode="number",
         number_font_size=22,
-        number_font_color="#FD1D1D",
+        number_font_color="#E1306C",
         value=media_post_like,
         title={"text": "<span style='font-size:16px;color:black'>Média:</span>"},
         domain = {'y': [0, 1], 'x': [0.5, 0.7]}))
     fig1.add_trace(go.Indicator(
         mode="number",
         number_font_size=22,
-        number_font_color="#FD1D1D",
+        number_font_color="#E1306C",
         value=max_post_like,
         title={"text": "<span style='font-size:16px;color:black'>Máximo:</span>"},
         domain = {'y': [0, 1], 'x': [0.7, 1]}))
@@ -95,21 +95,21 @@ def metricas(df):
     fig2.add_trace(go.Indicator(
         mode="number",
         number_font_size=22,
-        number_font_color="#F56040",
+        number_font_color="#833AB4",
         value=soma_post_comments,
         title={"text": "<span style='font-size:16px;color:black'>Total:</span>"},
         domain={'y': [0, 1], 'x': [0.2, 0.5]}))
     fig2.add_trace(go.Indicator(
         mode="number",
         number_font_size=22,
-        number_font_color="#F56040",
+        number_font_color="#833AB4",
         value=media_post_comments,
         title={"text": "<span style='font-size:16px;color:black'>Média:</span>"},
         domain={'y': [0, 1], 'x': [0.5, 0.7]}))
     fig2.add_trace(go.Indicator(
         mode="number",
         number_font_size=22,
-        number_font_color="#F56040",
+        number_font_color="#833AB4",
         value=max_post_comments,
         title={"text": "<span style='font-size:16px;color:black'>Máximo:</span>"},
         domain={'y': [0, 1], 'x': [0.7, 1]}))
@@ -161,22 +161,22 @@ def pie3(df):
         COLECAO_COMENTARIOS = 0
 
     labels = ['Imagem', "Coleção", 'Vídeo']
-    colors = ['#E1306C', '#C13584', '#833AB4']
+    colors = ['#FCAF45', '#F77737', '#FD1D1D']
     fig = make_subplots(rows=1, cols=3, specs=[[{'type':'domain'}, {'type':'domain'}, {'type':'domain'}]],
                           subplot_titles=['Publicações:', 'Likes:', 'Comentários:'])
 
-    fig.add_trace(go.Pie(labels=labels, name="Publicações",
+    fig.add_trace(go.Pie(labels=labels, name="",
                            values=[IMAGEM, COLECAO, VIDEO],
                            textinfo='none', showlegend=True,
                            domain={'y': [0, 1], 'x': [0, 0.3]},
                            marker=dict(colors=colors, line=dict(color='#000010', width=2))))
 
-    fig.add_trace(go.Pie(labels=labels, name="Likes",
+    fig.add_trace(go.Pie(labels=labels, name="",
                            values=[IMAGEM_LIKES, COLECAO_LIKES, VIDEO_LIKES],
                            textinfo='none', showlegend=True,
                            domain={'y': [0, 1], 'x': [0.35, 0.65]},
                            marker=dict(colors=colors, line=dict(color='#000010', width=2))))
-    fig.add_trace(go.Pie(labels=labels, name="Comentários",
+    fig.add_trace(go.Pie(labels=labels, name="",
                            values=[IMAGEM_COMENTARIOS, COLECAO_COMENTARIOS, VIDEO_COMENTARIOS],
                            textinfo='none', showlegend=True,
                            domain={'y': [0, 1], 'x': [0.7, 1]},
@@ -278,7 +278,7 @@ def bar_hora(df):
     fig.update_layout(
         paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
         legend=dict(font_size=11, orientation="h", yanchor="top", y=1.20, xanchor="center", x=0.5),
-        height=200, barmode='stack', margin=dict(l=1, r=1, b=1, t=1), autosize=True, hovermode="x", )
+        height=200, barmode='stack', margin=dict(l=1, r=10, b=25, t=10), autosize=True, hovermode="x", )
     fig.update_yaxes(
         title_text="Número de Interações",title_font=dict(family='Sans-serif', size=12),
         tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
@@ -393,54 +393,61 @@ def linha_nome(df):
     figB2.add_trace(go.Scatter(
         x=df_met['dia'], y=df_met['inter'],
         name='Metropoles', mode='lines',  hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#C41A1B'), stackgroup='one'))
-
+        line=dict(width=3, color='#C41A1B')))
     figB2.add_trace(go.Scatter(
         x=df_fol['dia'], y=df_fol['inter'],
         name='Folha de S.Paulo', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#008B8B'), stackgroup='two'))
-
+        line=dict(width=3, color='#008B8B')))
     figB2.add_trace(go.Scatter(
         x=df_uol['dia'], y=df_uol['inter'],
         name='UOL', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#FECB17'), stackgroup='three'))
+        line=dict(width=3, color='#FECB17')))
     figB2.add_trace(go.Scatter(
         x=df_est['dia'], y=df_est['inter'],
         name='Estadão', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#405DE6'), stackgroup='four'))
+        line=dict(width=3, color='#405DE6')))
     figB2.add_trace(go.Scatter(
         x=df_glo['dia'], y=df_glo['inter'],
         name='O Globo', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#004787'), stackgroup='five'))
+        line=dict(width=3, color='#004787')))
     figB2.add_trace(go.Scatter(
         x=df_cnn['dia'], y=df_cnn['inter'],
         name='CNN Brasil', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#ff4500'), stackgroup='six'))
-
+        line=dict(width=3, color='#ff4500')))
     figB2.add_trace(go.Scatter(
         x=df_jpn['dia'], y=df_jpn['inter'],
         name='Jovem Pan', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#2F4F4F'), stackgroup='seven'))
+        line=dict(width=3, color='#2F4F4F')))
     figB2.add_trace(go.Scatter(
         x=df_pr7['dia'], y=df_pr7['inter'],
         name='Portal R7', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#2bb003'), stackgroup='eight'))
+        line=dict(width=3, color='#2bb003')))
     figB2.add_trace(go.Scatter(
         x=df_pg1['dia'], y=df_pg1['inter'],
         name='Portal G1', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#ff0000'), stackgroup='nine'))
+        line=dict(width=3, color='#ff0000')))
     figB2.add_trace(go.Scatter(
         x=df_bbc['dia'], y=df_bbc['inter'],
         name='BBC News', mode='lines', hovertemplate=None, xhoverformat="%d %b %y",
-        line=dict(width=2, color='#A52A2A'), stackgroup='ten'))
+        line=dict(width=3, color='#A52A2A')))
 
 
     figB2.update_layout(
         paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
-        legend=dict(font_size=12, orientation="h", yanchor="top", y=1.40, xanchor="left", x=0.06),
-        height=220, hovermode="x unified", margin=dict(l=1, r=1, b=1, t=1))
+        legend=dict(font_size=14, orientation="h", yanchor="top", y=1.50, xanchor="center", x=0.5),
+        height=250, hovermode="x unified", margin=dict(l=10, r=10, b=0, t=10))
     figB2.update_xaxes(
-        rangeslider_visible=True)
+        rangeslider_visible=True, showgrid=False,
+        rangeselector=dict(
+            buttons=list([
+                dict(count=5, label="5D", step="day", stepmode="backward"),
+                dict(count=15, label="15D", step="day", stepmode="backward"),
+                dict(count=1, label="1M", step="month", stepmode="backward"),
+                dict(count=2, label="2M", step="month", stepmode="backward"),
+                dict(label="TUDO", step="all")
+            ])
+        )
+    )
     figB2.update_yaxes(
         title_text="Número de Interações", title_font=dict(family='Sans-serif', size=12),
         tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
@@ -514,7 +521,7 @@ def linha_nome2(df):
         legend=dict(font_size=12, orientation="h", yanchor="top", y=1.40, xanchor="left", x=0.06),
         height=220, hovermode="x unified", margin=dict(l=1, r=1, b=1, t=1))
     figB2.update_xaxes(
-        rangeslider_visible=True)
+        rangeslider_visible=True, showgrid=False)
     figB2.update_yaxes(
         title_text="Número de Interações", title_font=dict(family='Sans-serif', size=12),
         tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
@@ -776,5 +783,239 @@ def plot_wordcoud(df):
         min_word_length=3).generate(words)
     plt.imshow(wordcloud)
     plt.axis('off')  # to off the axis of x and
+
+    return fig
+
+
+def plot_point_nome(df):
+
+    df_gp = df.groupby('Nome').agg('sum').reset_index()
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(x=df_gp['likes'], y=df_gp['comentarios'], customdata=df_gp['Nome'],
+                             mode='markers', text=df_gp['UNIDADE'], name='',
+                             hovertemplate="</br><b>Likes:</b> %{x:,.0f}" +
+                                           "</br><b>Comentários:</b> %{y:,.0f}"
+                                           "</br><b>Instagram:</b> %{customdata}" +
+                                           "</br><b>Publicações:</b> %{text}",
+                             marker=dict(
+                                 size=(df_gp['UNIDADE']/20),
+                                 color=df_gp['inter'],
+                                 colorscale='Portland',
+                                 showscale=True)
+                             ))
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        height=250, margin=dict(l=10, r=10, b=10, t=10))
+    fig.update_xaxes(
+        title_text="Likes", title_font=dict(family='Sans-serif', size=18), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=12), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+    fig.update_yaxes(
+        title_text="Comentários", title_font=dict(family='Sans-serif', size=20), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+
+    return fig
+
+def plot_point_nome2(df):
+
+    df_gp = df.groupby('Nome').agg('sum').reset_index()
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Scatter(y=df_gp['likes'], x=df_gp['comentarios'], customdata=df_gp['Nome'],
+                             mode='markers',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}" +
+                                           "</br><b>Instagram:</b> %{customdata}",
+                             marker=dict(
+                                 size=12,
+                                 color=df_gp['inter'],
+                                 colorscale='Portland',
+                                 showscale=True)
+                             ))
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        height=250, margin=dict(l=10, r=10, b=10, t=10))
+    fig.update_xaxes(
+        title_text="Comentários", title_font=dict(family='Sans-serif', size=18), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=12), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+    fig.update_yaxes(
+        title_text="Likes", title_font=dict(family='Sans-serif', size=20), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+
+    return fig
+
+def plot_point(df):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(y=df['likes'], x=df['comentarios'], customdata=df['Nome'],
+                             mode='markers',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}" +
+                                           "</br><b>Instagram:</b> %{customdata}",
+                             marker=dict(
+                                 size=12,
+                                 color=df['inter'],
+                                 colorscale='Portland',
+                                 showscale=True)
+                             ))
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        height=250, margin=dict(l=10, r=10, b=10, t=10))
+    fig.update_xaxes(
+        title_text="Comentários", title_font=dict(family='Sans-serif', size=18), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=12), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+    fig.update_yaxes(
+        title_text="Likes", title_font=dict(family='Sans-serif', size=20), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+
+    return fig
+
+
+def plot_point2(df):
+
+    df_met = df.query("Nome == 'Metropoles'")
+    df_fol = df.query("Nome == 'Folha de S.Paulo'")
+    df_uol = df.query("Nome == 'UOL'")
+    df_est = df.query("Nome == 'Estadão'")
+    df_glo = df.query("Nome == 'O Globo'")
+    df_cnn = df.query("Nome == 'CNN Brasil'")
+    df_jpn = df.query("Nome == 'Jovem Pan'")
+    df_pr7 = df.query("Nome == 'Portal R7'")
+    df_pg1 = df.query("Nome == 'Portal G1'")
+    df_bbc = df.query("Nome == 'BBC News'")
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(y=df_met['likes'], x=df_met['comentarios'],
+                             mode='markers', name='Metroples',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#C41A1B')
+                             ))
+
+    fig.add_trace(go.Scatter(y=df_fol['likes'], x=df_fol['comentarios'],
+                             mode='markers', name='Folha de SP',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#008B8B')
+                             ))
+
+    fig.add_trace(go.Scatter(y=df_uol['likes'], x=df_uol['comentarios'],
+                             mode='markers', name='UOL',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#FECB17')
+                             ))
+    fig.add_trace(go.Scatter(y=df_est['likes'], x=df_est['comentarios'],
+                             mode='markers', name='Estadão',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#405DE6')
+                             ))
+    fig.add_trace(go.Scatter(y=df_glo['likes'], x=df_glo['comentarios'],
+                             mode='markers', name='O Golbo',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#004787')
+                             ))
+    fig.add_trace(go.Scatter(y=df_cnn['likes'], x=df_cnn['comentarios'],
+                             mode='markers', name='CNN Brasil',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#ff4500')
+                             ))
+    fig.add_trace(go.Scatter(y=df_jpn['likes'], x=df_jpn['comentarios'],
+                             mode='markers', name='Jovem Pan',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#2F4F4F')
+                             ))
+    fig.add_trace(go.Scatter(y=df_pr7['likes'], x=df_pr7['comentarios'],
+                             mode='markers', name='Portal R7',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#2bb003')
+                             ))
+    fig.add_trace(go.Scatter(y=df_pg1['likes'], x=df_pg1['comentarios'],
+                             mode='markers', name='Portal G1',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#ff0000')
+                             ))
+    fig.add_trace(go.Scatter(y=df_bbc['likes'], x=df_bbc['comentarios'],
+                             mode='markers', name='BBC News',
+                             hovertemplate="</br><b>Comentários:</b> %{x:,.0f}" +
+                                           "</br><b>Likes:</b> %{y:,.0f}",
+                             marker=dict(
+                                 size=12,
+                                 color='#A52A2A')
+                             ))
+
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        height=200, legend_font_size=10, margin=dict(l=10, r=10, b=10, t=10))
+    fig.update_xaxes(
+        title_text="Comentários", title_font=dict(family='Sans-serif', size=18), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=12), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+    fig.update_yaxes(
+        title_text="Likes", title_font=dict(family='Sans-serif', size=20), zeroline=False,
+        tickfont=dict(family='Sans-serif', size=14), nticks=7, showgrid=True, gridwidth=0.8, gridcolor='#D3D3D3')
+
+    return fig
+
+
+def bar_inclina(df):
+
+    df['dia_'] = pd.to_datetime(df['dia_'], errors='coerce')
+    df['mês'] = df['dia_'].dt.month
+    df_gp = df.groupby('mês').agg('sum').reset_index()
+
+    y_num = df_gp['UNIDADE']
+    y_num_soma = df_gp['likes']
+    y_num_comments = df_gp['comentarios']
+
+    values = df_gp.mês.unique()
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        name='Likes', x=values, y=y_num_soma,
+        hovertemplate="</br><b>Total de Likes:</b> %{y:,.0f}",
+        textposition='none', marker_color='#E1306C'
+    ))
+    fig.add_trace(go.Bar(
+        name='Comentários', x=values, y=y_num_comments,
+        hovertemplate="</br><b>Total de Comentários:</b> %{y:,.0f}",
+        textposition='none', marker_color='#833AB4'
+    ))
+    fig.add_trace(go.Bar(
+        name='Publicações', x=values, y=y_num,
+        hovertemplate="</br><b>Total de Publicações:</b> %{y:,.0f}",
+        textposition='none', marker_color='#405DE6'
+    ))
+    fig.update_layout(
+        paper_bgcolor="#F8F8FF", plot_bgcolor="#F8F8FF", font={'color': "#000000", 'family': "sans-serif"},
+        legend=dict(font_size=11, orientation="h", yanchor="top", y=1.20, xanchor="center", x=0.5),
+        height=200, barmode='stack', margin=dict(l=1, r=1, b=1, t=1), autosize=True, hovermode="x")
+    fig.update_yaxes(
+        title_text="Número de Interações",title_font=dict(family='Sans-serif', size=12),
+        tickfont=dict(family='Sans-serif', size=9), nticks=7, showgrid=True, gridwidth=0.5, gridcolor='#D3D3D3')
 
     return fig
