@@ -40,78 +40,6 @@ with st.sidebar:
     st.markdown("""---""")
 
 
-    if opt == "🔎 Laboratório":
-        with st.expander("⚙️ Configurar Dados"):
-            all_Nomes = df.Nome.unique().tolist()
-            selected_Nomes = st.multiselect("Selecione as contas que deseja analisar:",
-                                            options=all_Nomes, default=all_Nomes)
-
-            all_tipos = df.tipo.unique().tolist()
-            selected_tipos = st.multiselect("Selecione o tipo da publicação:",
-                                            options=all_tipos, default=all_tipos)
-
-            df["dia_"] = pd.to_datetime(df["dia"]).dt.date
-            data_start = df["dia_"].unique().max()
-            data_end = df["dia_"].unique().min()
-            date_min, date_max = st.date_input("Selecione o intervalo de datas:", (data_end, data_start))
-            mask_data = (df['dia_'] > date_min) & (df['dia_'] <= date_max)
-
-            slider1, slider2 = st.slider('Data Filtro Index', 0, len(df) - 1, [0, len(df) - 1], 1)
-            mask_index = (df['index'] > slider1) & (df['index'] <= slider2)
-
-        with st.expander("⚙️ Configurar Dashbords"):
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Gráfico de Barra - Análise Comparativa:</h2>",
-                        unsafe_allow_html=True)
-
-            df_x = df[['Nome', 'tipo', 'link', 'dia', 'hora', 'semana', 'Turno']]
-            optionx = st.selectbox('Selecione coluna para o Eixo X:', df_x.columns.unique(), index=0)
-
-            df_y = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
-            optiony = st.selectbox('Selecione coluna para o Eixo Y:', df_y.columns.unique(), index=0, key=10)
-            st.markdown("")
-
-            formato = st.radio("Selecione o formato do Gráfico:",
-                               options=["Total", "Média", "Por Publicação"], horizontal=True)
-
-            st.markdown("""---""")
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Gráfico de Linha - Análise Temporal:</h2>",
-                        unsafe_allow_html=True)
-
-            df_x_linha = df[['time', 'dia', 'link']]
-            optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
-                                         df_x_linha.columns.unique(), index=1, key=11)
-
-            df_y_linha = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
-            optiony_linha = st.selectbox('Selecione coluna para o Eixo Y:',
-                                         df_y_linha.columns.unique(), index=0, key=12)
-
-            formato_linha = st.radio("Selecione o formato do Gráfico:",
-                                     options=["Total", "Média"], key=13, horizontal=True)
-
-            st.markdown("""---""")
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Mapa de Calor - Análise por Matriz:</h2>",
-                        unsafe_allow_html=True)
-
-
-            df_heatmap = df[['likes', 'comentarios', 'inter',  'UNIDADE']]
-            option_heatmap = st.selectbox('Selecione a variável do Gráfico:',
-                                          df_heatmap.columns.unique(), index=0)
-
-            formato_map = st.radio("Selecione o formato do Gráfico:",
-                                     options=["Total", "Média"], key=14, horizontal=True)
-
-            st.markdown("""---""")
-            st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
-                        ">Nuvem de Palavras - Análise de Frequência:</h2>",
-                        unsafe_allow_html=True)
-        rodape1()
-
-
-
-
 
 if opt == "📈 Dashbords":
 
@@ -291,6 +219,7 @@ if opt == "📈 Dashbords":
 ###########################################################################################
 
 elif opt == "🔎 Laboratório":
+
     #topo1()
     st.markdown("<h1 style='font-size:220%; text-align: center; color: #5B51D8; padding: 0px 20px;'" +
                     ">Data App - Instagram Monitore</h1>",
@@ -355,10 +284,82 @@ elif opt == "🔎 Laboratório":
             st.markdown("")
 
     inicio_manual = st.checkbox("Ativar Laboratório 🔎")
+
     if inicio_manual:
 
-        st.markdown("")
+        with st.sidebar:
 
+            with st.expander("⚙️ Configurar Dados"):
+                all_Nomes = df.Nome.unique().tolist()
+                selected_Nomes = st.multiselect("Selecione as contas que deseja analisar:",
+                                                options=all_Nomes, default=all_Nomes)
+
+                all_tipos = df.tipo.unique().tolist()
+                selected_tipos = st.multiselect("Selecione o tipo da publicação:",
+                                                options=all_tipos, default=all_tipos)
+
+                df["dia_"] = pd.to_datetime(df["dia"]).dt.date
+                data_start = df["dia_"].unique().max()
+                data_end = df["dia_"].unique().min()
+                date_min, date_max = st.date_input("Selecione o intervalo de datas:", (data_end, data_start))
+                mask_data = (df['dia_'] > date_min) & (df['dia_'] <= date_max)
+
+                slider1, slider2 = st.slider('Data Filtro Index', 0, len(df) - 1, [0, len(df) - 1], 1)
+                mask_index = (df['index'] > slider1) & (df['index'] <= slider2)
+
+            with st.expander("⚙️ Configurar Dashbords"):
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Gráfico de Barra - Análise Comparativa:</h2>",
+                            unsafe_allow_html=True)
+
+                df_x = df[['Nome', 'tipo', 'link', 'dia', 'hora', 'semana', 'Turno']]
+                optionx = st.selectbox('Selecione coluna para o Eixo X:', df_x.columns.unique(), index=0)
+
+                df_y = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                optiony = st.selectbox('Selecione coluna para o Eixo Y:', df_y.columns.unique(), index=0, key=10)
+                st.markdown("")
+
+                formato = st.radio("Selecione o formato do Gráfico:",
+                                   options=["Total", "Média", "Por Publicação"], horizontal=True)
+
+                st.markdown("""---""")
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Gráfico de Disperção:</h2>",
+                            unsafe_allow_html=True)
+
+                formato_bolha = st.selectbox("Selecione o Agrupamento:",
+                                             options=["Nome", "tipo", 'link', 'ID post', 'dia', 'hora', 'Turno',
+                                                      'semana'])
+
+                df_x_bolha = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                optionx_bolha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
+                                             df_x_bolha.columns.unique(), index=0, key=31)
+
+                df_y_bolha = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                optiony_bolha = st.selectbox('Selecione coluna para o Eixo Y:',
+                                             df_y_bolha.columns.unique(), index=1, key=32)
+                formato_bolha2 = st.radio("Selecione o formato do Gráfico:",
+                                          options=["Total", "Média"], key=33, horizontal=True)
+
+                st.markdown("""---""")
+                st.markdown("<h2 style='font-size:100%; text-align: left; color: #5B51D8;'" +
+                            ">Gráfico de Linha - Análise Temporal:</h2>",
+                            unsafe_allow_html=True)
+
+                df_x_linha = df[['time', 'dia', 'link']]
+                optionx_linha = st.selectbox('Selecione coluna para o Eixo X: - diferente',
+                                             df_x_linha.columns.unique(), index=1, key=11)
+
+                df_y_linha = df[['likes', 'comentarios', 'inter', 'UNIDADE']]
+                optiony_linha = st.selectbox('Selecione coluna para o Eixo Y:',
+                                             df_y_linha.columns.unique(), index=0, key=12)
+
+                formato_linha = st.radio("Selecione o formato do Gráfico:",
+                                         options=["Total", "Média"], key=13, horizontal=True)
+                st.markdown("""---""")
+
+
+            rodape1()
 
         df = df[df.Nome.isin(selected_Nomes)]
         df = df[df.tipo.isin(selected_tipos)]
@@ -370,6 +371,76 @@ elif opt == "🔎 Laboratório":
                     unsafe_allow_html=True)
 
         selected_rows = folha_tabela(df_select)
+
+        if len(selected_rows) == 0:
+            fig3A2 = plot_bar(formato, df_select, optionx, optiony)
+            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                        "><i>"+formato+"</i> de <i>" + optiony + "</i> por <i>" + optionx + "</i> - Análise de Comparativa</h1>",
+                        unsafe_allow_html=True)
+
+            st.plotly_chart(fig3A2, use_container_width=True)
+
+            with st.expander("🔎️   Dados - Análise Comparativa"):
+                col1, col2 = st.columns([1, 1])
+                df_sum = df_select.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx,
+                                                                                                    ascending=True)
+
+                checkdf = st.checkbox('Visualizar Dados', key=50)
+                if checkdf:
+                    simple_aggrid(df_sum)
+
+                df_sum = df_sum.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Dados", data=df_sum,
+                                           file_name="DataApp_Analise_Comparativa.csv", mime='text/csv')
+
+            st.markdown("""---""")
+
+            st.text("")
+            st.text("")
+            fig3 = plot_bolha(formato_bolha, formato_bolha2, df_select, optionx_bolha, optiony_bolha)
+            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                        "><i>" + formato_bolha + "</i> de <i>" + optionx_bolha + "</i> por <i>" + optiony_bolha + "</i> - Análise Tempotal</h1>",
+                        unsafe_allow_html=True)
+            st.plotly_chart(fig3, use_container_width=True)
+
+            with st.expander("🔎️   Dados - Análise de Disperção"):
+                df_gp = df_select.groupby(formato_bolha).agg('sum').reset_index()
+                df_gp = df_gp[[formato_bolha, optionx_bolha, optiony_bolha]]
+
+                checkdf = st.checkbox('Visualizar Dados', key=54)
+                if checkdf:
+                    simple_aggrid(df_gp)
+
+                df_gp = df_gp.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Dados", data=df_gp,
+                                   file_name="DataApp_Analise_Dispercao.csv", mime='text/csv')
+
+            st.markdown("""---""")
+
+            st.text("")
+            st.text("")
+
+            fig2 = plot_line(df_select, optionx_linha, optiony_linha, formato_linha)
+            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                        "><i>"+formato_linha+"</i> de <i>"+optiony_linha+"</i> por <i>"+optionx_linha+"</i> - Análise Tempotal</h1>",
+                        unsafe_allow_html=True)
+
+            st.plotly_chart(fig2, use_container_width=True)
+
+            with st.expander("🔎️   Dados - Análise Tempotal"):
+                df_temp = df_select.groupby([optionx_linha]).agg('sum').reset_index()
+                df_temp = df_temp[[optionx_linha, optiony_linha]]
+
+                checkdf = st.checkbox('Visualizar Dados', key=52)
+                if checkdf:
+                    simple_aggrid(df_temp)
+
+                df_temp = df_temp.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Dados", data=df_temp,
+                                       file_name="DataApp_Analise_Temporal.csv", mime='text/csv')
+
+            st.markdown("""---""")
+
 
         if len(selected_rows) != 0:
 
@@ -398,6 +469,29 @@ elif opt == "🔎 Laboratório":
             st.text("")
             st.text("")
 
+            fig3 = plot_bolha2(formato_bolha, formato_bolha2, selected_rows, optionx_bolha, optiony_bolha)
+            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
+                        "><i>" + formato_bolha + "</i> de <i>" + optionx_bolha + "</i> por <i>" + optiony_bolha + "</i> - Análise Tempotal</h1>",
+                        unsafe_allow_html=True)
+            st.plotly_chart(fig3, use_container_width=True)
+
+            with st.expander("🔎️   Dados - Análise de Disperção"):
+                df_gp = selected_rows.groupby(formato_bolha).agg('sum').reset_index()
+                df_gp = df_gp[[formato_bolha, optionx_bolha, optiony_bolha]]
+
+                checkdf = st.checkbox('Visualizar Dados', key=54)
+                if checkdf:
+                    simple_aggrid(df_gp)
+
+                df_gp = df_gp.to_csv(index=False).encode('utf-8')
+                st.download_button(label="Download Dados", data=df_gp,
+                                   file_name="DataApp_Analise_Dispercao.csv", mime='text/csv')
+
+            st.markdown("""---""")
+
+            st.text("")
+            st.text("")
+
             fig2 = plot_line(selected_rows, optionx_linha, optiony_linha, formato_linha)
             st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
                         "><i>" + formato_linha + "</i> de <i>" + optiony_linha + "</i> por <i>" + optionx_linha + "</i> - Análise Tempotal</h1>",
@@ -419,223 +513,8 @@ elif opt == "🔎 Laboratório":
 
             st.markdown("""---""")
 
-            st.text("")
-            st.text("")
-
-            try:
-                fig3 = plot_hotmap(selected_rows, option_heatmap, formato_map)
-                st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                            "><i>" + formato_map + "</i> de <i>" + option_heatmap + "</i> por Turno e Dia da Semana</h1>",
-                            unsafe_allow_html=True)
-
-                st.plotly_chart(fig3, use_container_width=True)
-
-                with st.expander("🔎️  Dados - Análise por Turno e Dia da Semana"):
-                    col1, col2 = st.columns([1, 1])
-                    df_map = selected_rows.groupby(['semana', 'Turno']).agg('sum').reset_index()
-                    df_map = df_map[['semana', 'Turno', option_heatmap]]
-
-                    checkdf = st.checkbox('Visualizar Dados', key=53)
-                    if checkdf:
-                        simple_aggrid(df_map)
-
-                    df_map = df_map.to_csv(index=False).encode('utf-8')
-                    st.download_button(label="Download Dados", data=df_map,
-                                       file_name="DataApp_Analise_Turno_Semana.csv", mime='text/csv')
-
-                st.markdown("""---""")
-
-            except:
-                st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                            ">Análise de <i>" + option_heatmap + "</i> por Turno e Dia da Semana </h1>",
-                            unsafe_allow_html=True)
-                st.markdown("")
-                st.warning(
-                    'Os dodos selecionados são insuficientes par gerar o Mapa de calor, por favor adcione mais dados!',
-                    icon="⚠️")
-
-                with st.expander("🔎️  Dados - Análise por Turno e Dia da Semana"):
-                    col1, col2 = st.columns([1, 1])
-                    df_map = selected_rows.groupby(['semana', 'Turno']).agg('sum').reset_index()
-                    df_map = df_map[['semana', 'Turno', option_heatmap]]
-
-                    checkdf = st.checkbox('Visualizar Dados', key=53)
-                    if checkdf:
-                        simple_aggrid(df_map)
-
-                    df_map = df_map.to_csv(index=False).encode('utf-8')
-                    st.download_button(label="Download Dados", data=df_map,
-                                       file_name="DataApp_Analise_Turno_Semana.csv", mime='text/csv')
-
-            st.markdown("""---""")
-
-            st.text("")
-            st.text("")
-
-            fig4 = plot_wordcoud(selected_rows)
-            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                        ">Análise das palavras mais frequentes</h1>",
-                        unsafe_allow_html=True)
-            st.pyplot(fig4)
-
-            with st.expander("🔎️   Dados - Palavras Frequêntes"):
-                df_word = selected_rows[["descricao"]]
-
-                checkdf = st.checkbox('Visualizar Dados', key=54)
-                if checkdf:
-                    simple_aggrid(df_word)
-
-                df_word = df_word.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Dados", data=df_word,
-                                   file_name="DataApp_Analise_Temporal.csv", mime='text/csv')
-
-            st.markdown("""---""")
-            st.text("")
-            st.text("")
 
 
-
-
-
-
-
-
-
-        if len(selected_rows) == 0:
-            fig3A2 = plot_bar(formato, df_select, optionx, optiony)
-            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                        "><i>"+formato+"</i> de <i>" + optiony + "</i> por <i>" + optionx + "</i> - Análise de Comparativa</h1>",
-                        unsafe_allow_html=True)
-
-            st.plotly_chart(fig3A2, use_container_width=True)
-
-            with st.expander("🔎️   Dados - Análise Comparativa"):
-                col1, col2 = st.columns([1, 1])
-                df_sum = df_select.groupby([optionx])[optiony].agg('sum').reset_index().sort_values(optionx,
-                                                                                                    ascending=True)
-
-                checkdf = st.checkbox('Visualizar Dados', key=50)
-                if checkdf:
-                    simple_aggrid(df_sum)
-
-                df_sum = df_sum.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Dados", data=df_sum,
-                                           file_name="DataApp_Analise_Comparativa.csv", mime='text/csv')
-
-            st.markdown("""---""")
-
-            st.text("")
-            st.text("")
-
-            fig2 = plot_line(df_select, optionx_linha, optiony_linha, formato_linha)
-            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                        "><i>"+formato_linha+"</i> de <i>"+optiony_linha+"</i> por <i>"+optionx_linha+"</i> - Análise Tempotal</h1>",
-                        unsafe_allow_html=True)
-
-            st.plotly_chart(fig2, use_container_width=True)
-
-            with st.expander("🔎️   Dados - Análise Tempotal"):
-                df_temp = df_select.groupby([optionx_linha]).agg('sum').reset_index()
-                df_temp = df_temp[[optionx_linha, optiony_linha]]
-
-                checkdf = st.checkbox('Visualizar Dados', key=52)
-                if checkdf:
-                    simple_aggrid(df_temp)
-
-                df_temp = df_temp.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Dados", data=df_temp,
-                                       file_name="DataApp_Analise_Temporal.csv", mime='text/csv')
-
-            st.markdown("""---""")
-
-            st.text("")
-            st.text("")
-
-            try:
-                fig3 = plot_hotmap(df_select, option_heatmap, formato_map)
-                st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                            "><i>"+formato_map+"</i> de <i>"+option_heatmap+"</i> por Turno e Dia da Semana</h1>",
-                            unsafe_allow_html=True)
-
-                st.plotly_chart(fig3, use_container_width=True)
-
-                with st.expander("🔎️  Dados - Análise por Turno e Dia da Semana"):
-                    col1, col2 = st.columns([1, 1])
-                    df_map = df_select.groupby(['semana', 'Turno']).agg('sum').reset_index()
-                    df_map = df_map[['semana', 'Turno', option_heatmap]]
-
-                    checkdf = st.checkbox('Visualizar Dados', key=53)
-                    if checkdf:
-                        simple_aggrid(df_map)
-
-                    df_map = df_map.to_csv(index=False).encode('utf-8')
-                    st.download_button(label="Download Dados", data=df_map,
-                                           file_name="DataApp_Analise_Turno_Semana.csv", mime='text/csv')
-
-                st.markdown("""---""")
-
-            except:
-                st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                            ">Análise de <i>" + option_heatmap + "</i> por Turno e Dia da Semana </h1>",
-                            unsafe_allow_html=True)
-                st.markdown("")
-                st.warning(
-                    'Os dodos selecionados são insuficientes par gerar o Mapa de calor, por favor adcione mais dados!',
-                    icon="⚠️")
-
-                with st.expander("🔎️  Dados - Análise por Turno e Dia da Semana"):
-                    col1, col2 = st.columns([1, 1])
-                    df_map = df_select.groupby(['semana', 'Turno']).agg('sum').reset_index()
-                    df_map = df_map[['semana', 'Turno', option_heatmap]]
-
-                    checkdf = st.checkbox('Visualizar Dados', key=53)
-                    if checkdf:
-                        simple_aggrid(df_map)
-
-                    df_map = df_map.to_csv(index=False).encode('utf-8')
-                    st.download_button(label="Download Dados", data=df_map,
-                                           file_name="DataApp_Analise_Turno_Semana.csv", mime='text/csv')
-
-            st.markdown("""---""")
-
-            st.text("")
-            st.text("")
-
-            fig4 = plot_wordcoud(df_select)
-            st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
-                        ">Análise das palavras mais frequentes</h1>",
-                        unsafe_allow_html=True)
-            st.pyplot(fig4)
-
-            with st.expander("🔎️   Dados - Palavras Frequêntes"):
-                df_word = df_select[["descricao"]]
-
-                checkdf = st.checkbox('Visualizar Dados', key=54)
-                if checkdf:
-                    simple_aggrid(df_word)
-
-                df_word = df_word.to_csv(index=False).encode('utf-8')
-                st.download_button(label="Download Dados", data=df_word,
-                                       file_name="DataApp_Analise_Temporal.csv", mime='text/csv')
-
-            st.markdown("""---""")
-            st.text("")
-            st.text("")
-
-
-
-
-
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-st.text("")
-st.text("")
 st.text("")
 st.text("")
 st.text("")
