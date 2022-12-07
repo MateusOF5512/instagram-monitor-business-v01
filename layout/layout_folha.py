@@ -121,11 +121,11 @@ def folha_posts(df):
 
         col2, col3, col4 = st.columns([520, 60, 520])
         with col2:
-            fig4 = plot_wordcoud(df)
             st.markdown("<h1 style='font-size:150%; text-align: center; color: #5B51D8;'" +
                         ">Análise das palavras mais frequentes</h1>",
                         unsafe_allow_html=True)
-            st.pyplot(fig4, use_container_width=True, config=config)
+            fig4 = plot_wordcoud(df)
+            st.pyplot(fig4)
         with col3:
             st.text("")
         with col4:
